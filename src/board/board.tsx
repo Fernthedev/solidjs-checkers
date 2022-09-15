@@ -1,4 +1,4 @@
-import { JSX } from "solid-js";
+import { Index, JSX } from "solid-js";
 import { availableCircleSpots } from "../board_math";
 import { CheckerboardPiece } from "../models";
 import Circle from "./circle";
@@ -11,12 +11,14 @@ interface CheckerBoardProps {
     checkerPieces: CheckerboardPiece[]
 }
 
+interface CheckerboardSlot {
+    piece: CheckerboardPiece | undefined
+    playablePosition: boolean
+}
+
 export default function CheckerBoard(props: CheckerBoardProps) {
+    const squares: CheckerboardSlot[] = Array(props.width * props.height).fill(undefined);
 
-    console.log(props.checkerPieces)
-
-    const squares: JSX.Element[] = Array(props.width * props.height).fill(undefined);
-    
     for (const [column, row] of availableCircleSpots(props.width, props.height)) {
         const squareId = column + (row * props.width);
 
@@ -27,32 +29,21 @@ export default function CheckerBoard(props: CheckerBoardProps) {
 
         // Find a circle at this coordinate
         const circle = props.checkerPieces.find(e => e.position[0] === column && e.position[1] === row);
-        const circleColor = circle?.player === 0
 
-
-        squares[squareId] =
-            <Square color={"#555555"}>
-                {circle &&
-                    <Circle
-                        color={circleColor ? "#819ca9" : "#ffcdd2"}
-
-                        // color={circleColor ? "#ff0000" : "#00ff00"}
-
-
-                        // color={circleColor ? "#eeeeee" : "rgb(255, 255, 255, 0.15)"}
-                        // filter={circleColor ? "blur(4)" : "blur(2)"}
-                        radius={50} />}
-                <span style={{ position: "fixed" }}>
-                    {squareId}
-                </span>
-            </Square>
+        squares[squareId] = {
+            piece: circle,
+            playablePosition: true
+        }
     }
 
 
     // Fill the rest of the squares with white
     squares.forEach((square, i) => {
         if (square) return;
-        squares[i] = <Square color={"#eeeeee"} />
+        squares[i] = {
+            piece: undefined,
+            playablePosition: false
+        }
     })
 
     return (
@@ -69,7 +60,25 @@ export default function CheckerBoard(props: CheckerBoardProps) {
                 "grid-template-columns": `repeat(${props.width}, 1fr)`,
                 "grid-template-rows": `repeat(${props.height}, 1fr)`
             }}>
-                {squares}
+                <Index each={squares}>
+                    {(item, index) => (
+                        <Square color={item().playablePosition ? "#555555" : "eeeeee"}>
+                            {item().piece &&
+                                <Circle
+                                color={item().piece?.player === 0 ? "#819ca9" : "#ffcdd2"}
+
+                                    // color={circleColor ? "#ff0000" : "#00ff00"}
+
+
+                                    // color={circleColor ? "#eeeeee" : "rgb(255, 255, 255, 0.15)"}
+                                    // filter={circleColor ? "blur(4)" : "blur(2)"}
+                                    radius={50} />}
+                            <span style={{ position: "fixed" }}>
+                                {index}
+                            </span>
+                        </Square>
+                    )}
+                </Index>
             </div>
         </div>
     )
