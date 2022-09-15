@@ -1,4 +1,6 @@
-import { Index, JSX } from "solid-js";
+import { For, Index, JSX } from "solid-js";
+import { createStore } from "solid-js/store";
+
 import { availableCircleSpots } from "../board_math";
 import { CheckerboardPiece } from "../models";
 import Circle from "./circle";
@@ -17,7 +19,7 @@ interface CheckerboardSlot {
 }
 
 export default function CheckerBoard(props: CheckerBoardProps) {
-    const squares: CheckerboardSlot[] = Array(props.width * props.height).fill(undefined);
+    const [squares, setSquare] = createStore<readonly CheckerboardSlot[]>(Array(props.width * props.height).fill(undefined));
 
     for (const [column, row] of availableCircleSpots(props.width, props.height)) {
         const squareId = column + (row * props.width);
@@ -30,20 +32,16 @@ export default function CheckerBoard(props: CheckerBoardProps) {
         // Find a circle at this coordinate
         const circle = props.checkerPieces.find(e => e.position[0] === column && e.position[1] === row);
 
-        squares[squareId] = {
+        setSquare(squareId, {
             piece: circle,
             playablePosition: true
-        }
+        })
     }
 
-
     // Fill the rest of the squares with white
-    squares.forEach((square, i) => {
-        if (square) return;
-        squares[i] = {
-            piece: undefined,
-            playablePosition: false
-        }
+    setSquare(e => e === undefined, {
+        piece: undefined,
+        playablePosition: false
     })
 
     return (
@@ -60,12 +58,12 @@ export default function CheckerBoard(props: CheckerBoardProps) {
                 "grid-template-columns": `repeat(${props.width}, 1fr)`,
                 "grid-template-rows": `repeat(${props.height}, 1fr)`
             }}>
-                <Index each={squares}>
+                <For each={squares}>
                     {(item, index) => (
-                        <Square color={item().playablePosition ? "#555555" : "eeeeee"}>
-                            {item().piece &&
+                        <Square color={item.playablePosition ? "#555555" : "eeeeee"}>
+                            {item.piece &&
                                 <Circle
-                                color={item().piece?.player === 0 ? "#819ca9" : "#ffcdd2"}
+                                    color={item.piece?.player === 0 ? "#819ca9" : "#ffcdd2"}
 
                                     // color={circleColor ? "#ff0000" : "#00ff00"}
 
@@ -78,7 +76,7 @@ export default function CheckerBoard(props: CheckerBoardProps) {
                             </span>
                         </Square>
                     )}
-                </Index>
+                </For>
             </div>
         </div>
     )
