@@ -1,8 +1,9 @@
 import { batch, createMemo, createRenderEffect, createSignal, For, Index, JSX, Show } from "solid-js";
 import { createStore, produce } from "solid-js/store";
 
-import { availableCircleSpots, calculatePlayableSpots, getPosition } from "../board_math";
-import { CheckerboardPiece } from "../models";
+import { availableCircleSpots, calculatePlayableSpots, getPosition } from "../../board_math";
+import { Colors } from "../../colorscheme";
+import { CheckerboardPiece } from "../../models";
 import Circle from "./circle";
 import Square from "./square";
 
@@ -92,7 +93,7 @@ export default function CheckerBoard(props: CheckerBoardProps) {
                 width: "95vmin",
                 height: "95vmin",
                 display: "grid",
-                outline: "#393939 solid 0.5rem",
+                outline: `${Colors.boardOutline} solid 0.5rem`,
                 "grid-template-columns": `repeat(${props.width}, 1fr)`,
                 "grid-template-rows": `repeat(${props.height}, 1fr)`
             }}>
@@ -101,9 +102,9 @@ export default function CheckerBoard(props: CheckerBoardProps) {
 
                         // Function so it reacts in tracking scope
                         const squareColor = createMemo(() => {
-                            if (playableSpotsArray()?.some(e => e === index())) return "#888888"
+                            if (playableSpotsArray()?.some(e => e === index())) return Colors.highlightedSquare
                             
-                            return square.playable ? "#555555" : "eeeeee";
+                            return square.playable ? Colors.invertSquare : Colors.whiteSquare;
                         })
                         
                         return (
@@ -112,12 +113,9 @@ export default function CheckerBoard(props: CheckerBoardProps) {
                                 <Show when={piece} keyed>
                                     {(piece) => <Circle
                                         highlighted={selectedPiece() === piece}
-                                        color={piece?.player === 0 ? "#819ca9" : "#ffcdd2"}
+                                        color={piece?.player === 0 ? Colors.player1 : Colors.player2}
                                         onClick={() => setSelectedPiece(p => p === piece ? null : piece)}
 
-                                        // color={circleColor ? "#ff0000" : "#00ff00"}
-                                        // color={circleColor ? "#eeeeee" : "rgb(255, 255, 255, 0.15)"}
-                                        // filter={circleColor ? "blur(4)" : "blur(2)"}
                                         radius={50} />
                                     }
                                 </Show>

@@ -1,4 +1,4 @@
-import CheckerBoard from "../board/board";
+import CheckerBoard from "../components/board/board";
 import { availableCircleSpots } from "../board_math";
 import { CheckerboardPiece } from "../models";
 
