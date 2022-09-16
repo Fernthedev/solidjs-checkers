@@ -1,5 +1,5 @@
-import { batch, createRenderEffect, createSignal, For, Index, JSX, Show } from "solid-js";
-import { createStore } from "solid-js/store";
+import { batch, createMemo, createRenderEffect, createSignal, For, Index, JSX, Show } from "solid-js";
+import { createStore, produce } from "solid-js/store";
 
 import { availableCircleSpots } from "../board_math";
 import { CheckerboardPiece } from "../models";
@@ -14,41 +14,60 @@ interface CheckerBoardProps {
 }
 
 interface CheckerboardSlot {
-    piece: CheckerboardPiece | undefined
     playablePosition: boolean
 }
 
 export default function CheckerBoard(props: CheckerBoardProps) {
-    const [checkerPieces, setCheckerPieces] = createStore<readonly CheckerboardPiece[]>(props.initialPieces)
-    const [squares, setSquare] = createStore<readonly CheckerboardSlot[]>(Array(props.width * props.height).fill(undefined));
-    const [selectedPiece, setSelectedPiece] = createSignal<CheckerboardPiece | undefined>(undefined)
-    
-    batch(() => {
-        // Assign the squares with possible circles
-        for (const [column, row] of availableCircleSpots(props.width, props.height)) {
-            const squareId = column + (row * props.width);
+    const [checkerPieces, setCheckerPieces] = createStore<Record<number, CheckerboardPiece>>(Object.fromEntries(props.initialPieces.map(e => [e.position, e])))
+    const squares = createMemo<readonly CheckerboardSlot[]>(() => {
+        const playables = Array.from(availableCircleSpots(props.width, props.height)).map(e => e[0] + (e[1] * props.width));
 
-            // 1 3 5 7 9 are circle squares
-            // 1 5 9
-            // const hasCircle = !white;
-            // const circleColor = squareId % 4 === (row % 2 ? 0 : 1)
+        const array = Array(props.width * props.height).fill(undefined).map<CheckerboardSlot>(
+            (_, squareId) => ({
+                playablePosition: playables.some(p => p === squareId)
+            }));
 
-            // Find a circle at this coordinate
-            const circle = checkerPieces.find(e => e.position[0] === column && e.position[1] === row);
+        return array;
+    });
 
-            setSquare(squareId, {
-                piece: circle,
-                playablePosition: true
+    const squareAndPieces = createMemo<readonly [CheckerboardSlot, CheckerboardPiece | null][]>(() => squares().map((s, i) => [s, checkerPieces[i]]))
+
+    const [selectedPiece, setSelectedPiece] = createSignal<CheckerboardPiece | null>(null)
+
+    function moveToSquare(piece: CheckerboardPiece, newPosition: number) {
+        batch(() => {
+            setCheckerPieces(produce(p => {
+                delete p[piece.position]
+            }))
+            setCheckerPieces(newPosition, {
+                ...piece,
+                position: newPosition
             })
-        }
-    })
+        })
+    }
 
 
-    // Fill the rest of the squares with white
-    setSquare(e => e === undefined, {
-        piece: undefined,
-        playablePosition: false
-    })
+
+
+    function onSquareClick(squareId: number) {
+        const piece = selectedPiece()
+
+        if (!piece) return; // no piece selected
+        if (checkerPieces[squareId]) return; // piece in place, do nothing
+
+        batch(() => {
+            const oldPosition = piece.position;
+            const newPosition = squareId;
+
+
+            console.log("Old location", oldPosition, "new location", newPosition)
+
+
+            /// Move to new location
+            moveToSquare(piece, squareId)
+            setSelectedPiece(null)
+        })
+    }
 
     return (
         <div style={{
@@ -64,27 +83,29 @@ export default function CheckerBoard(props: CheckerBoardProps) {
                 "grid-template-columns": `repeat(${props.width}, 1fr)`,
                 "grid-template-rows": `repeat(${props.height}, 1fr)`
             }}>
-                <For each={squares}>
-                    {(item, index) => (
-                        <Square color={item.playablePosition ? "#555555" : "eeeeee"}>
-                            <Show when={item.piece !== undefined}>
-                                <Circle
-                                    highlighted={selectedPiece() === item.piece}
-                                    color={item.piece?.player === 0 ? "#819ca9" : "#ffcdd2"}
-                                    onClick={() => setSelectedPiece(p => p === item.piece ? undefined : item.piece)}
+                <For each={squareAndPieces()}>
+                    {([item, piece], index) => {
+                        return (
+                            <Square onClick={(item.playablePosition) ? () => onSquareClick(index()) : undefined}
+                                color={item.playablePosition ? "#555555" : "eeeeee"}>
+                                <Show when={piece} keyed>
+                                    {(piece) => <Circle
+                                        highlighted={selectedPiece() === piece}
+                                        color={piece?.player === 0 ? "#819ca9" : "#ffcdd2"}
+                                        onClick={() => setSelectedPiece(p => p === piece ? null : piece)}
 
-                                    // color={circleColor ? "#ff0000" : "#00ff00"}
-
-
-                                    // color={circleColor ? "#eeeeee" : "rgb(255, 255, 255, 0.15)"}
-                                    // filter={circleColor ? "blur(4)" : "blur(2)"}
-                                    radius={50} />
-                            </Show>
-                            <span style={{ position: "fixed" }}>
-                                {index}
-                            </span>
-                        </Square>
-                    )}
+                                        // color={circleColor ? "#ff0000" : "#00ff00"}
+                                        // color={circleColor ? "#eeeeee" : "rgb(255, 255, 255, 0.15)"}
+                                        // filter={circleColor ? "blur(4)" : "blur(2)"}
+                                        radius={50} />
+                                    }
+                                </Show>
+                                <span style={{ position: "fixed" }}>
+                                    {index()}
+                                </span>
+                            </Square>
+                        );
+                    }}
                 </For>
             </div>
         </div>

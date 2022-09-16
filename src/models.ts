@@ -1,5 +1,5 @@
 export interface CheckerboardPiece {
-    position: [number, number]
+    position: number
     queen: boolean
     uuid: number
     player: number

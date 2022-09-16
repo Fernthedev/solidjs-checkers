@@ -36,7 +36,7 @@ function* player1Pieces(width: number, height: number): Generator<CheckerboardPi
         const [column, row] = spots.next().value!
 
         yield {
-            position: [column, row],
+            position: column + (row * width),
             queen: false,
             uuid: 0,
             player: 0
@@ -61,7 +61,7 @@ function* player2Pieces(width: number, height: number): Generator<CheckerboardPi
         const [column, row] = spots.next().value!
 
         yield {
-            position: [column, row],
+            position: column + (row * width),
             queen: false,
             uuid: 0,
             player: 1
