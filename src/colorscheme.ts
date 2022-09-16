@@ -7,4 +7,4 @@ export const Colors = {
   player2: "#ffcdd2",
 
   boardOutline: "#393939",
-};
+}

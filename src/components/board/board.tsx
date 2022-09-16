@@ -1,75 +1,74 @@
-import { batch, createMemo, createSignal, For, Show } from "solid-js";
-import { createStore } from "solid-js/store";
+import { batch, createMemo, createSignal, For, Show } from "solid-js"
 
-import { availableCircleSpots } from "../../board_math";
-import { Colors } from "../../colorscheme";
-import { IMultiplayerCore as IMultiplayerCore } from "../../logic/multiplayer";
-import { CheckerboardPiece } from "../../models";
-import Circle from "./circle";
-import Square from "./square";
+import { availableCircleSpots } from "../../board_math"
+import { Colors } from "../../colorscheme"
+import { IMultiplayerCore as IMultiplayerCore } from "../../logic/multiplayer"
+import { CheckerboardPiece } from "../../models"
+import Circle from "./circle"
+import Square from "./square"
 
-import "./board.css";
+import "./board.css"
 
 interface CheckerBoardProps {
-  width: number;
-  height: number;
+  width: number
+  height: number
 
-  multiplayer: IMultiplayerCore;
+  multiplayer: IMultiplayerCore
 }
 
 interface CheckerboardSlot {
-  playable: boolean;
+  playable: boolean
 }
 
 export default function CheckerBoard(props: CheckerBoardProps) {
-  const multiplayer = () => props.multiplayer;
+  const multiplayer = () => props.multiplayer
   const [selectedPiece, setSelectedPiece] =
-    createSignal<CheckerboardPiece | null>(null);
+    createSignal<CheckerboardPiece | null>(null)
 
   const squares = createMemo<readonly CheckerboardSlot[]>(() => {
     const playables = Array.from(
       availableCircleSpots(props.width, props.height)
-    ).map((e) => e[0] + e[1] * props.width);
+    ).map((e) => e[0] + e[1] * props.width)
 
     const array = Array(props.width * props.height)
       .fill(undefined)
       .map<CheckerboardSlot>((_, squareId) => ({
         playable: playables.some((p) => p === squareId),
-      }));
+      }))
 
-    return array;
-  });
+    return array
+  })
 
   /// Combine pieces and squares
   const squareAndPieces = createMemo<
     readonly [CheckerboardSlot, CheckerboardPiece | null][]
-  >(() => squares().map((s, i) => [s, multiplayer().pieceAtLocation(i)]));
+  >(() => squares().map((s, i) => [s, multiplayer().pieceAtLocation(i)]))
 
   const playableSpotsArray = createMemo(() => {
-    const piece = selectedPiece();
-    const result = piece && Array.from(multiplayer().playablePositions(piece));
+    const piece = selectedPiece()
+    const result = piece && Array.from(multiplayer().playablePositions(piece))
 
-    console.log(result);
-    return result;
-  });
+    console.log(result)
+    return result
+  })
 
   function onSquareClick(squareId: number) {
-    const piece = selectedPiece();
+    const piece = selectedPiece()
 
-    if (!piece) return; // no piece selected
-    if (piece.position === squareId) return; // square where piece was selected should be ignored
-    if (!playableSpotsArray()!.some((e) => e === squareId)) return; // Not a playable location
+    if (!piece) return // no piece selected
+    if (piece.position === squareId) return // square where piece was selected should be ignored
+    if (!playableSpotsArray()!.some((e) => e === squareId)) return // Not a playable location
 
     batch(() => {
-      const oldPosition = piece.position;
-      const newPosition = squareId;
+      const oldPosition = piece.position
+      const newPosition = squareId
 
-      console.log("Old location", oldPosition, "new location", newPosition);
+      console.log("Old location", oldPosition, "new location", newPosition)
 
       /// Move to new location
-      multiplayer().takeTurn(piece, newPosition);
-      setSelectedPiece(null);
-    });
+      multiplayer().takeTurn(piece, newPosition)
+      setSelectedPiece(null)
+    })
   }
 
   return (
@@ -94,12 +93,12 @@ export default function CheckerBoard(props: CheckerBoardProps) {
               // Function so it reacts in tracking scope
               const squareColor = createMemo(() => {
                 if (playableSpotsArray()?.some((e) => e === index()))
-                  return Colors.highlightedSquare;
+                  return Colors.highlightedSquare
 
                 return square.playable
                   ? Colors.invertSquare
-                  : Colors.whiteSquare;
-              });
+                  : Colors.whiteSquare
+              })
 
               return (
                 <Square
@@ -122,9 +121,9 @@ export default function CheckerBoard(props: CheckerBoardProps) {
                         onClick={
                           multiplayer().whosTurn() == piece.player
                             ? () =>
-                              setSelectedPiece((p) =>
-                                p === piece ? null : piece
-                              )
+                                setSelectedPiece((p) =>
+                                  p === piece ? null : piece
+                                )
                             : undefined
                         }
                         radius={50}
@@ -144,11 +143,11 @@ export default function CheckerBoard(props: CheckerBoardProps) {
                     {index()}
                   </span>
                 </Square>
-              );
+              )
             }}
           </For>
         </div>
       </div>
     </>
-  );
+  )
 }

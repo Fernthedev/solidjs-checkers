@@ -1,15 +1,11 @@
-import { Params, useParams } from "@solidjs/router";
+import { Params, useParams } from "@solidjs/router"
 
 interface GameOverParams extends Params {
-    player: string
+  player: string
 }
 
 export default function GameOverPage() {
-    const params = useParams<GameOverParams>()
+  const params = useParams<GameOverParams>()
 
-    return (
-        <h1>
-            The winner is Player {parseInt(params.player) + 1}
-        </h1>
-    )
+  return <h1>The winner is Player {parseInt(params.player) + 1}</h1>
 }

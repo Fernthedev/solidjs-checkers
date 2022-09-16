@@ -1,7 +1,7 @@
-import { Route, Router, Routes } from "@solidjs/router";
-import { render } from "solid-js/web";
-import Game from "./pages/Game";
-import GameOverPage from "./pages/GameOver";
+import { Route, Router, Routes } from "@solidjs/router"
+import { render } from "solid-js/web"
+import Game from "./pages/Game"
+import GameOverPage from "./pages/GameOver"
 
 render(
   () => (
@@ -13,4 +13,4 @@ render(
     </Router>
   ),
   document.getElementById("root") as HTMLElement
-);
+)
