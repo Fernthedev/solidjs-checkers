@@ -1,4 +1,5 @@
 import { runWithOwner } from "solid-js"
+import { Player } from "./logic/multiplayer"
 import { CheckerboardPiece } from "./models"
 
 export function* availableCircleSpots(width: number, height: number) {
@@ -18,9 +19,33 @@ export function getPosition([column, row]: [number, number], width: number) {
     return column + (row * width)
 }
 
-export function* calculatePlayableSpots(piece: CheckerboardPiece, width: number, height: number, queen: boolean, direction: number, pieces: CheckerboardPiece[]) {
+
+export function getCoordinates(square: number, width: number) {
+    return [square % width, Math.floor(square / width)]
+}
+
+export function getDirection(player: Player) {
+    return player === 0 ? 1 : -1
+}
+
+export function findKilled(oldPosition: number, newPosition: number, width: number) {
+    const [column, row] = getCoordinates(oldPosition, width)
+    const [newColumn, newRow] = getCoordinates(newPosition, width)
+
+    // modulus to get column
+    const x_direction = column < newColumn ? 1 : -1
+    const y_direction = row < newRow ? 1 : -1
+    const killedPosition = getPosition([column + x_direction, row + y_direction], width)
+
+    return killedPosition
+}
+
+export function* calculatePlayableSpots(piece: CheckerboardPiece, width: number, height: number, pieces: CheckerboardPiece[]) {
     
     const square = piece.position;
+    const queen = piece.queen
+    const direction = getDirection(piece.player)
+
     const currentColumn = square % width
     const currentRow = Math.floor(square / width)
 

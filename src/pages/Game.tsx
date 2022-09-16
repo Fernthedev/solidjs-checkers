@@ -1,6 +1,7 @@
 import CheckerBoard from "../components/board/board";
 import { availableCircleSpots } from "../board_math";
 import { CheckerboardPiece } from "../models";
+import { LocalMultiplayer } from "../logic/local_multiplayer";
 
 
 
@@ -73,7 +74,9 @@ export default function Game() {
     const width = 8;
     const height = 8;
 
+    const multiplayer = new LocalMultiplayer(width, height, [...player1Pieces(width, height), ...player2Pieces(width, height)]);
+
     return (
-        <CheckerBoard width={width} height={height} initialPieces={[...player1Pieces(width, height), ...player2Pieces(width, height)]} />
+        <CheckerBoard width={width} height={height} multiplayer={multiplayer} />
     )
 }
