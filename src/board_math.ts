@@ -45,6 +45,18 @@ export function findKilled(
   return killedPosition;
 }
 
+export function canBeQueen(player: Player, position: number, width: number, height: number) {
+  const direction = getDirection(player)
+
+  const [_, row] = getCoordinates(position, width)
+
+  if (direction == -1) {
+    return row === 0
+  } else {
+    return row === height - 1
+  }
+}
+
 export function* calculatePlayableSpots(
   piece: CheckerboardPiece,
   width: number,

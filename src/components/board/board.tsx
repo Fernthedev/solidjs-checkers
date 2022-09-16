@@ -114,6 +114,7 @@ export default function CheckerBoard(props: CheckerBoardProps) {
                   <Show when={piece} keyed>
                     {(piece) => (
                       <Circle
+                        queen={piece.queen}
                         highlighted={selectedPiece() === piece}
                         color={
                           piece.player === 0 ? Colors.player1 : Colors.player2
@@ -121,9 +122,9 @@ export default function CheckerBoard(props: CheckerBoardProps) {
                         onClick={
                           multiplayer().whosTurn() == piece.player
                             ? () =>
-                                setSelectedPiece((p) =>
-                                  p === piece ? null : piece
-                                )
+                              setSelectedPiece((p) =>
+                                p === piece ? null : piece
+                              )
                             : undefined
                         }
                         radius={50}

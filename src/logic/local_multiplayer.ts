@@ -2,6 +2,7 @@ import { Accessor, createSignal, Setter } from "solid-js";
 import { createStore, produce, SetStoreFunction } from "solid-js/store";
 import {
   calculatePlayableSpots,
+  canBeQueen,
   findKilled,
   getCoordinates,
 } from "../board_math";
@@ -96,9 +97,12 @@ export class LocalMultiplayer implements IMultiplayerCore {
       produce((p) => {
         delete p[piece.position];
 
+        const queen = piece.queen || canBeQueen(piece.player, newPosition, this.width, this.height)
+
         /// New position
         p[newPosition] = {
           ...piece,
+          queen: queen,
           position: newPosition,
         };
       })
