@@ -1,10 +1,12 @@
-import { Router } from '@solidjs/router';
-import { render } from 'solid-js/web';
-import Game from './pages/Game';
+import { Router } from "@solidjs/router";
+import { render } from "solid-js/web";
+import Game from "./pages/Game";
 
-
-render(() => (
+render(
+  () => (
     <Router>
-        <Game />
+      <Game />
     </Router>
-), document.getElementById('root') as HTMLElement);
+  ),
+  document.getElementById("root") as HTMLElement
+);
