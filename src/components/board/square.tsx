@@ -4,20 +4,15 @@ import { JSX, ParentProps } from "solid-js"
 import "./square.css"
 
 interface SquareProps extends ParentProps {
-  color: Property.Color
+  squareClass?: string
   onClick?: JSX.EventHandlerUnion<HTMLDivElement, MouseEvent>
-  showClick: boolean
 }
 
 export default function Square(props: SquareProps) {
   return (
     <div
-      class="square"
+      class={`square ${props.squareClass ?? ""}`}
       onClick={props.onClick}
-      style={{
-        cursor: props.showClick ? "pointer" : undefined,
-        "background-color": props.color,
-      }}
       children={props.children}
     />
   )

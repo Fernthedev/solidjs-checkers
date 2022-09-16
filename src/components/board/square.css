@@ -2,3 +2,17 @@
   display: flex;
   text-align: center;
 }
+
+
+.square-white {
+  background-color: #eeeeee;
+}
+
+.square-invert {
+  background-color: #555555;
+}
+
+.square-highlight {
+  background-color: #888888;
+  cursor: pointer;
+}

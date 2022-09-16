@@ -83,7 +83,6 @@ export default function CheckerBoard(props: CheckerBoardProps) {
         <div
           class="checker-grid"
           style={{
-            outline: `${Colors.boardOutline} solid 0.5rem`,
             "grid-template-columns": `repeat(${props.width}, 1fr)`,
             "grid-template-rows": `repeat(${props.height}, 1fr)`,
           }}
@@ -91,24 +90,17 @@ export default function CheckerBoard(props: CheckerBoardProps) {
           <For each={squareAndPieces()}>
             {([square, piece], index) => {
               // Function so it reacts in tracking scope
-              const squareColor = createMemo(() => {
+              const squareClass = createMemo(() => {
                 if (playableSpotsArray()?.some((e) => e === index()))
-                  return Colors.highlightedSquare
+                  return "square-highlight"
 
-                return square.playable
-                  ? Colors.invertSquare
-                  : Colors.whiteSquare
+                return square.playable ? "square-invert" : "square-white"
               })
 
               return (
                 <Square
                   onClick={() => onSquareClick(index())}
-                  showClick={
-                    square.playable &&
-                    selectedPiece() !== null &&
-                    playableSpotsArray()!.some((e) => e === index())
-                  }
-                  color={squareColor()}
+                  squareClass={squareClass()}
                 >
                   <Show when={piece} keyed>
                     {(piece) => (

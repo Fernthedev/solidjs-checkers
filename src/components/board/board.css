@@ -2,4 +2,5 @@
   width: 89vmin;
   height: 89vmin;
   display: grid;
+  outline: #393939 solid 0.5rem;
 }

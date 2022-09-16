@@ -1,21 +1,19 @@
-import { Property } from "csstype"
-import { JSX, Show } from "solid-js"
-
-import "./square.css"
+import { Property } from "csstype";
+import { JSX, Show } from "solid-js";
 
 interface CircleProps {
-  color: Property.Color
-  queen: boolean
-  highlighted: boolean
-  radius: number
-  onClick?: JSX.EventHandlerUnion<SVGSVGElement, MouseEvent>
+  color: Property.Color;
+  queen: boolean;
+  highlighted: boolean;
+  radius: number;
+  onClick?: JSX.EventHandlerUnion<SVGSVGElement, MouseEvent>;
 }
 
 export default function Circle(props: CircleProps) {
-  const size = 256
+  const size = 256;
 
-  const adjustedRadius = props.radius * (size * 0.008)
-  const adjustedStroke = 2.5 * size * 0.006
+  const adjustedRadius = props.radius * (size * 0.008);
+  const adjustedStroke = 2.5 * size * 0.006;
 
   return (
     <svg
@@ -34,7 +32,9 @@ export default function Circle(props: CircleProps) {
         stroke={!props.highlighted ? "black" : "DarkOrange"}
         stroke-width={adjustedStroke}
         fill={props.color}
-      ></circle>
+      >
+
+      </circle>
       <Show when={props.queen}>
         <circle
           filter={"blur(5) invert(0.8)"}
@@ -42,8 +42,9 @@ export default function Circle(props: CircleProps) {
           cy={size / 2}
           r={adjustedRadius * 0.7}
           fill={"rgba(255, 255, 255, 0.8)"}
+
         />
       </Show>
     </svg>
-  )
+  );
 }
