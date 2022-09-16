@@ -6,6 +6,7 @@ import PlayerText from "../components/board/player"
 import { createStore } from "solid-js/store"
 import { createEffect } from "solid-js"
 import { useNavigate } from "@solidjs/router"
+import { IMultiplayerCore } from "../logic/multiplayer"
 
 function* player1Pieces(
   width: number,
@@ -53,17 +54,6 @@ function* player2Pieces(
   width: number,
   height: number
 ): Generator<CheckerboardPiece> {
-  // const adjustedWidth = width % 2 !== 0 ? width : width + 1;
-  // for (let i = 0; i < adjustedWidth; i++) {
-  //     yield {
-  //         // position: [(((i + 1) * 2) - 1) % 9, Math.floor((i * 2) / 8)],
-  //         position: [(((i + 1) * 2)) % (height + 1), height - 1 - Math.floor((((i + 1) * 2) - 1) / (adjustedWidth))],
-  //         queen: false,
-  //         uuid: 0,
-  //         player: 1
-  //     };
-  // }
-
   const spots = Array.from(availableCircleSpots(width, height))
     .reverse()
     .values()
@@ -85,7 +75,7 @@ export default function Game() {
 
   const navigator = useNavigate()
 
-  const [multiplayer, setMultiplayer] = createStore(
+  const [multiplayer, setMultiplayer] = createStore<Readonly<IMultiplayerCore>>(
     new LocalMultiplayer(width, height, [
       ...player1Pieces(width, height),
       ...player2Pieces(width, height),
