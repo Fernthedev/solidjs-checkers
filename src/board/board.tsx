@@ -38,7 +38,7 @@ export default function CheckerBoard(props: CheckerBoardProps) {
 
     const playableSpotsArray = createMemo(() => {
         const piece = selectedPiece()
-        const result = piece && Array.from(calculatePlayableSpots(piece.position, props.width, props.height, piece.queen, piece?.player === 0 ? 1 : -1, Object.values(checkerPieces).filter(e => e.player != piece.player)));
+        const result = piece && Array.from(calculatePlayableSpots(piece, props.width, props.height, piece.queen, piece?.player === 0 ? 1 : -1, Object.values(checkerPieces)));
 
         console.log(result)
         return result
@@ -98,9 +98,17 @@ export default function CheckerBoard(props: CheckerBoardProps) {
             }}>
                 <For each={squareAndPieces()}>
                     {([square, piece], index) => {
+
+                        // Function so it reacts in tracking scope
+                        const squareColor = createMemo(() => {
+                            if (playableSpotsArray()?.some(e => e === index())) return "#888888"
+                            
+                            return square.playable ? "#555555" : "eeeeee";
+                        })
+                        
                         return (
                             <Square onClick={(square.playable) ? () => onSquareClick(index()) : undefined}
-                                color={square.playable ? "#555555" : "eeeeee"}>
+                                color={squareColor()}>
                                 <Show when={piece} keyed>
                                     {(piece) => <Circle
                                         highlighted={selectedPiece() === piece}

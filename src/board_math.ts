@@ -18,7 +18,9 @@ export function getPosition([column, row]: [number, number], width: number) {
     return column + (row * width)
 }
 
-export function* calculatePlayableSpots(square: number, width: number, height: number, queen: boolean, direction: number, pieces: CheckerboardPiece[]) {
+export function* calculatePlayableSpots(piece: CheckerboardPiece, width: number, height: number, queen: boolean, direction: number, pieces: CheckerboardPiece[]) {
+    
+    const square = piece.position;
     const currentColumn = square % width
     const currentRow = Math.floor(square / width)
 
@@ -48,7 +50,8 @@ export function* calculatePlayableSpots(square: number, width: number, height: n
 
     function* tryKill(column: number, row: number) {
         const position = getPosition([column, row], width) 
-        const conflictingPiece = pieces.find(p => p.position === position)
+        // Check if it's a piece from the other player
+        const conflictingPiece = pieces.find(p => p.player !== piece.player && p.position === position)
         if (conflictingPiece) {
             // left
             console.log(conflictingPiece.position, square)
