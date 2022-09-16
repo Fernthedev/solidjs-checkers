@@ -1,3 +1,4 @@
+import { Accessor, createSignal, Setter } from "solid-js";
 import { createStore, produce, SetStoreFunction } from "solid-js/store";
 import { calculatePlayableSpots, findKilled, getCoordinates } from "../board_math";
 import { CheckerboardPiece } from "../models";
@@ -7,12 +8,17 @@ type PieceType = Record<number, CheckerboardPiece>
 type PartialPieceType = Partial<PieceType>
 
 export class LocalMultiplayer implements MultiplayerCore {
-    private turn: Player = 0
+    private turn: Accessor<Player>
+    private setTurn: Setter<Player>
     private pieces: Readonly<PieceType>
     private setPieces: SetStoreFunction<PartialPieceType>
 
     constructor(private width: number, private height: number, pieces: CheckerboardPiece[]) {
         const [p, sP] = createStore<PieceType>(Object.fromEntries(pieces.map(e => [e.position, e])))
+        const [t, setT] = createSignal<Player>(0)
+
+        this.turn = t;
+        this.setTurn = setT;
 
         this.pieces = p;
         this.setPieces = sP as SetStoreFunction<PartialPieceType>;
@@ -29,14 +35,14 @@ export class LocalMultiplayer implements MultiplayerCore {
     }
 
     whosTurn(): Player {
-        return this.turn
+        return this.turn()
     }
     local(): boolean {
         return true
     }
 
     takeTurn(piece: CheckerboardPiece, square: number): void {
-        if (piece.player != this.turn) throw "Wrong player taking turn!"
+        if (piece.player != this.turn()) throw "Wrong player taking turn!"
 
         const piecesValues = Object.values(this.pieces)
 
@@ -54,7 +60,8 @@ export class LocalMultiplayer implements MultiplayerCore {
         }
 
         this.moveToSquare(piece, square)
-        console.log(`Moved ${piece.position} to ${square}`)
+        this.setTurn(t => t === 0 ? 1 : 0)
+        console.log(`Moved ${piece.position} to ${square}, new turn ${this.turn()}`)
     }
 
     kill(piece: CheckerboardPiece) {

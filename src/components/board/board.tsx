@@ -50,7 +50,8 @@ export default function CheckerBoard(props: CheckerBoardProps) {
 
         if (!piece) return; // no piece selected
         if (piece.position === squareId) return // square where piece was selected should be ignored
-
+        if (!playableSpotsArray()!.some(e => e === squareId)) return // Not a playable location
+        
         batch(() => {
             const oldPosition = piece.position;
             const newPosition = squareId;
@@ -90,13 +91,13 @@ export default function CheckerBoard(props: CheckerBoardProps) {
                         })
 
                         return (
-                            <Square onClick={(square.playable) ? () => onSquareClick(index()) : undefined}
+                            <Square onClick={() => onSquareClick(index())} showClick={square.playable && selectedPiece() !== null && playableSpotsArray()!.some(e => e === index())}
                                 color={squareColor()}>
                                 <Show when={piece} keyed>
                                     {(piece) => <Circle
                                         highlighted={selectedPiece() === piece}
-                                        color={piece?.player === 0 ? Colors.player1 : Colors.player2}
-                                        onClick={() => setSelectedPiece(p => p === piece ? null : piece)}
+                                        color={piece.player === 0 ? Colors.player1 : Colors.player2}
+                                        onClick={multiplayer.whosTurn() == piece.player ? () => setSelectedPiece(p => p === piece ? null : piece) : undefined}
 
                                         radius={50} />
                                     }
