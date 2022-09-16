@@ -1,4 +1,4 @@
-import { Accessor, createSignal, Setter } from "solid-js"
+import { Accessor, batch, createSignal, Setter } from "solid-js"
 import { createStore, produce, SetStoreFunction } from "solid-js/store"
 import {
   calculatePlayableSpots,
@@ -73,14 +73,18 @@ export class LocalMultiplayer implements IMultiplayerCore {
     const killedPos = findKilled(piece.position, square, this.width)
     const killed = piecesValues.find((e) => e.position === killedPos)
 
-    if (killed) {
-      if (killed.player === piece.player) throw "You can't kill your own piece!"
+    batch(() => {
+      if (killed) {
+        if (killed.player === piece.player)
+          throw "You can't kill your own piece!"
 
-      this.kill(killed)
-    }
+        this.kill(killed)
+      }
 
-    this.moveToSquare(piece, square)
-    this.setTurn((t) => (t === 0 ? 1 : 0))
+      this.moveToSquare(piece, square)
+      this.setTurn((t) => (t === 0 ? 1 : 0))
+    })
+
     console.log(`Moved ${piece.position} to ${square}, new turn ${this.turn()}`)
   }
 
