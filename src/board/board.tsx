@@ -1,4 +1,4 @@
-import { batch, createRenderEffect, For, Index, JSX, Show } from "solid-js";
+import { batch, createRenderEffect, createSignal, For, Index, JSX, Show } from "solid-js";
 import { createStore } from "solid-js/store";
 
 import { availableCircleSpots } from "../board_math";
@@ -21,7 +21,7 @@ interface CheckerboardSlot {
 export default function CheckerBoard(props: CheckerBoardProps) {
     const [checkerPieces, setCheckerPieces] = createStore<readonly CheckerboardPiece[]>(props.initialPieces)
     const [squares, setSquare] = createStore<readonly CheckerboardSlot[]>(Array(props.width * props.height).fill(undefined));
-
+    const [selectedPiece, setSelectedPiece] = createSignal<CheckerboardPiece | undefined>(undefined)
     
     batch(() => {
         // Assign the squares with possible circles
@@ -69,7 +69,9 @@ export default function CheckerBoard(props: CheckerBoardProps) {
                         <Square color={item.playablePosition ? "#555555" : "eeeeee"}>
                             <Show when={item.piece !== undefined}>
                                 <Circle
+                                    highlighted={selectedPiece() === item.piece}
                                     color={item.piece?.player === 0 ? "#819ca9" : "#ffcdd2"}
+                                    onClick={() => setSelectedPiece(p => p === item.piece ? undefined : item.piece)}
 
                                     // color={circleColor ? "#ff0000" : "#00ff00"}
 
