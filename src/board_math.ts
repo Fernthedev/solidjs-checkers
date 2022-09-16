@@ -54,8 +54,9 @@ export function* calculatePlayableSpots(piece: CheckerboardPiece, width: number,
         const conflictingPiece = pieces.find(p => p.player !== piece.player && p.position === position)
         if (conflictingPiece) {
             // left
-            console.log(conflictingPiece.position, square)
-            if (conflictingPiece.position < square) {
+            // modulus to get column
+            console.log(conflictingPiece.position % width, square % width)
+            if (conflictingPiece.position % width < square % width) {
                 yield* yieldClamp(column - 1, row - 1)
                 yield* yieldClamp(column - 1, row + 1)
             } else {
