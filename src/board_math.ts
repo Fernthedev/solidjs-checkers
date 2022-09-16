@@ -25,8 +25,6 @@ export function* calculatePlayableSpots(square: number, width: number, height: n
 
 
     function* yieldClamp(column: number, row: number) {
-
-
         if (column < 0) return;
         if (column >= width) return;
 
@@ -41,6 +39,9 @@ export function* calculatePlayableSpots(square: number, width: number, height: n
 
         if (Math.abs(column - currentColumn) > 2 || Math.abs(row - currentRow) > 2) return
         
+        const position = getPosition([column, row], width)
+        const conflictingPiece = pieces.find(p => p.position === position)
+        if (conflictingPiece) return
 
         yield column + (row * width);
     }
