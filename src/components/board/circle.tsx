@@ -1,6 +1,8 @@
 import { Property } from "csstype"
 import { JSX } from "solid-js"
 
+import "./square.css"
+
 interface CircleProps {
     color: Property.Color,
     highlighted: boolean 
@@ -14,7 +16,7 @@ export default function Circle(props: CircleProps) {
 
     return (
         <svg
-    
+            class="square"
             style={{
                 cursor: props.onClick ? "pointer" : undefined,
             }}
