@@ -1,7 +1,7 @@
 import { batch, createMemo, createRenderEffect, createSignal, For, Index, JSX, Show } from "solid-js";
 import { createStore, produce } from "solid-js/store";
 
-import { availableCircleSpots } from "../board_math";
+import { availableCircleSpots, calculatePlayableSpots, getPosition } from "../board_math";
 import { CheckerboardPiece } from "../models";
 import Circle from "./circle";
 import Square from "./square";
@@ -14,46 +14,59 @@ interface CheckerBoardProps {
 }
 
 interface CheckerboardSlot {
-    playablePosition: boolean
+    playable: boolean
 }
 
 export default function CheckerBoard(props: CheckerBoardProps) {
     const [checkerPieces, setCheckerPieces] = createStore<Record<number, CheckerboardPiece>>(Object.fromEntries(props.initialPieces.map(e => [e.position, e])))
+    const [selectedPiece, setSelectedPiece] = createSignal<CheckerboardPiece | null>(null)
+
+
     const squares = createMemo<readonly CheckerboardSlot[]>(() => {
         const playables = Array.from(availableCircleSpots(props.width, props.height)).map(e => e[0] + (e[1] * props.width));
 
         const array = Array(props.width * props.height).fill(undefined).map<CheckerboardSlot>(
             (_, squareId) => ({
-                playablePosition: playables.some(p => p === squareId)
+                playable: playables.some(p => p === squareId)
             }));
 
         return array;
     });
 
+    /// Combine pieces and squares
     const squareAndPieces = createMemo<readonly [CheckerboardSlot, CheckerboardPiece | null][]>(() => squares().map((s, i) => [s, checkerPieces[i]]))
 
-    const [selectedPiece, setSelectedPiece] = createSignal<CheckerboardPiece | null>(null)
+    const playableSpotsArray = createMemo(() => {
+        const piece = selectedPiece()
+        const result = piece && Array.from(calculatePlayableSpots(piece.position, props.width, props.height, piece.queen, piece?.player === 0 ? 1 : -1, Object.values(checkerPieces).filter(e => e.player != piece.player)));
+
+        console.log(result)
+        return result
+    })
 
     function moveToSquare(piece: CheckerboardPiece, newPosition: number) {
         batch(() => {
             setCheckerPieces(produce(p => {
+                /// Delete old position
                 delete p[piece.position]
+
+                /// New position
+                p[newPosition] = {
+                    ...piece,
+                    position: newPosition
+                }
             }))
-            setCheckerPieces(newPosition, {
-                ...piece,
-                position: newPosition
-            })
         })
     }
-
-
-
 
     function onSquareClick(squareId: number) {
         const piece = selectedPiece()
 
         if (!piece) return; // no piece selected
         if (checkerPieces[squareId]) return; // piece in place, do nothing
+
+
+        if (!playableSpotsArray()?.some(e => e === squareId)) return
 
         batch(() => {
             const oldPosition = piece.position;
@@ -84,10 +97,10 @@ export default function CheckerBoard(props: CheckerBoardProps) {
                 "grid-template-rows": `repeat(${props.height}, 1fr)`
             }}>
                 <For each={squareAndPieces()}>
-                    {([item, piece], index) => {
+                    {([square, piece], index) => {
                         return (
-                            <Square onClick={(item.playablePosition) ? () => onSquareClick(index()) : undefined}
-                                color={item.playablePosition ? "#555555" : "eeeeee"}>
+                            <Square onClick={(square.playable) ? () => onSquareClick(index()) : undefined}
+                                color={square.playable ? "#555555" : "eeeeee"}>
                                 <Show when={piece} keyed>
                                     {(piece) => <Circle
                                         highlighted={selectedPiece() === piece}
