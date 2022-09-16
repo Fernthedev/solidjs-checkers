@@ -74,6 +74,6 @@ export default function Game() {
     const height = 8;
 
     return (
-        <CheckerBoard width={width} height={height} checkerPieces={[...player1Pieces(width, height), ...player2Pieces(width, height)]} />
+        <CheckerBoard width={width} height={height} initialPieces={[...player1Pieces(width, height), ...player2Pieces(width, height)]} />
     )
 }
