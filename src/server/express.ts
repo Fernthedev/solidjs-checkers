@@ -1,10 +1,9 @@
-import fs from "fs"
 import path from "path"
 import { fileURLToPath } from "url"
 import express from "express"
-import router from "./src/server/api/routes"
-import ws from "ws"
-import { onWebSocketConnect } from "./src/server/websocket_handler"
+import router from "./api/routes"
+import ws, { WebSocketServer } from "ws"
+import { onWebSocketConnect } from "./websocket_handler"
 
 const { PORT = 5173 } = process.env
 
@@ -22,7 +21,7 @@ function getSocketAlive(ws: ws.WebSocket) {
 async function createServer() {
   const app = express()
 
-  wsServer = new ws.Server({ noServer: true })
+  wsServer = new WebSocketServer({ noServer: true })
 
   wsServer.on("connection", (ws) => {
     setSocketAlive(ws, true)
@@ -62,11 +61,11 @@ async function createServer() {
   const server = app.listen(PORT)
 
   server.on("upgrade", (request, socket, head) => {
+    console.log("Upgrading connection")
     wsServer.handleUpgrade(request, socket, head, (socket) => {
       wsServer.emit("connection", socket, request)
 
-      // I hate this
-      onWebSocketConnect(socket as any)
+      onWebSocketConnect(socket, request)
     })
   })
 }

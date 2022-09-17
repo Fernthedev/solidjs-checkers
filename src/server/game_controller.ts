@@ -1,3 +1,4 @@
+import ws from "ws"
 import { LobbySession } from "./lobby"
 import { IPlayer } from "./player"
 
@@ -12,7 +13,7 @@ export function getRandomInt(
   return Math.floor(Math.random() * (max - min) + min) // The maximum is exclusive and the minimum is inclusive
 }
 
-function createPlayer(ws: WebSocket): IPlayer {
+export function createPlayer(ws: ws.WebSocket): IPlayer {
   return {
     socket: ws,
     spectating: false,
@@ -26,10 +27,12 @@ export function createSession(
   width: number,
   height: number
 ): LobbySession {
-  let id = getRandomInt()
+  let id = 20;  // getRandomInt()
   while (Object.hasOwn(sessions, id)) {
     id = getRandomInt()
   }
+
+  console.log("Created session", id)
 
   return (sessions[id] = new LobbySession(id, width, height))
 }
@@ -41,6 +44,7 @@ export function getSession(id: number) {
 export function removeSession(
     id: number
 ) {
+  console.log("Removed session", id)
     sessions[id]?.end()
     delete sessions[id]
 }

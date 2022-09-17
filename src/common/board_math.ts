@@ -1,6 +1,49 @@
 import { runWithOwner } from "solid-js"
 import { CheckerboardPiece, PlayerType } from "./models"
 
+
+export function* player1Pieces(
+  width: number,
+  height: number
+): Generator<CheckerboardPiece> {
+  const spots = availableCircleSpots(width, height)
+
+  for (let i = 0; i < width; i++) {
+    const [column, row] = spots.next().value!
+
+    const id = Math.random()
+
+    yield {
+      position: column + row * width,
+      queen: false,
+      uuid: id,
+      player: 0,
+    }
+  }
+}
+
+export function* player2Pieces(
+  width: number,
+  height: number
+): Generator<CheckerboardPiece> {
+  const spots = Array.from(availableCircleSpots(width, height))
+    .reverse()
+    .values()
+
+  for (let i = 0; i < width; i++) {
+    const [column, row] = spots.next().value!
+
+    const id = Math.random()
+
+    yield {
+      position: column + row * width,
+      queen: false,
+      uuid: id,
+      player: 1,
+    }
+  }
+}
+
 export function* availableCircleSpots(width: number, height: number) {
   // I am too lazy to find a proper algorithm/formula for this
   for (let row = 0; row < height; row++) {

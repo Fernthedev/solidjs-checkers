@@ -7,7 +7,7 @@ import { createSession } from "../game_controller"
 
 const sessionRouter = express.Router()
 
-sessionRouter.get<{}, LobbyCreationResponse, LobbyCreationRequest>(
+sessionRouter.post<{}, LobbyCreationResponse, LobbyCreationRequest>(
   "/start",
   (req, res) => {
     const { width, height } = req.body

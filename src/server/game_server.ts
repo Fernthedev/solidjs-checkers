@@ -1,4 +1,8 @@
-import { calculatePlayableSpots, findKilled } from "../common/board_math"
+import {
+  calculatePlayableSpots,
+  canBeQueen,
+  findKilled,
+} from "../common/board_math"
 import {
   CheckerboardPieceIdentity,
   CheckerboardPiece,
@@ -8,6 +12,8 @@ import { readPacket, writeToPlayer } from "../common/network/network"
 import { Packet } from "../common/network/packet"
 import { removeSession } from "./game_controller"
 import { IPlayer } from "./player"
+
+const decoder = new TextDecoder("utf-8")
 
 export class GameSession {
   private turn: PlayerType = 0
@@ -27,15 +33,16 @@ export class GameSession {
     )
 
     if (player.socket.readyState != WebSocket.OPEN) {
-      player.socket.addEventListener("connect", () =>
-        this.sendSessionData(player)
-      )
+      player.socket.addEventListener("open", () => this.sendSessionData(player))
     } else {
       this.sendSessionData(player)
     }
 
     player.socket.addEventListener("message", (ev) =>
-      this.handlePacket(player, ev)
+      this.handlePacket(
+        player,
+        ev.data as string //decoder.decode(new Uint8Array(ev.data))
+      )
     )
   }
 
@@ -62,8 +69,8 @@ export class GameSession {
     removeSession(this.id)
   }
 
-  handlePacket(player: IPlayer, ev: MessageEvent) {
-    const packet = readPacket(ev.data)
+  handlePacket(player: IPlayer, data: string) {
+    const packet = readPacket(data)
 
     try {
       if (packet.sessionData === null) {
@@ -144,6 +151,17 @@ export class GameSession {
     this.turn = this.turn === 0 ? 1 : 0
 
     this.moveSquare(piece, newPosition)
+
+    const queen =
+      piece.queen ||
+      canBeQueen(piece.player, newPosition, this.width, this.height)
+
+    if (piece.queen != queen) {
+      this.sendPacketToAll("pieceQueen", {
+        uuid: piece.uuid,
+      })
+    }
+
     this.sendPacketToAll("changeTurn", {
       newTurn: this.turn,
     })
@@ -160,11 +178,28 @@ export class GameSession {
   }
 
   sendSessionData(player?: IPlayer) {
-    const packet: Packet["sessionData"] = {
+    const packet = {
       width: this.width,
       height: this.height,
       pieces: this.players.flatMap((e) => Object.values(e.pieces)),
     }
-    writeToPlayer(player ?? this.players, "sessionData", packet)
+
+    if (player) {
+      writeToPlayer(player, "sessionData", {
+        ...packet,
+        yourUUID: player.uuid,
+        player: player.player ?? 0,
+        spectating: player.spectating,
+      })
+    } else {
+      this.players.forEach((e) =>
+        writeToPlayer(e, "sessionData", {
+          ...packet,
+          yourUUID: e.uuid,
+          player: e.player ?? 0,
+          spectating: e.spectating,
+        })
+      )
+    }
   }
 }

@@ -1,5 +1,9 @@
 import { CheckerboardPiece, CheckerboardPieceIdentity, PlayerType } from "../models"
 
+export interface InitialHandshakePacket {
+  lobbyID: number
+}
+
 export interface Packet {
   sessionClosed?: GameSessionClosed,
   serverError?: ServerError,
@@ -36,5 +40,8 @@ interface ChangeTurn {
 interface SessionData {
   width: number,
   height: number,
-  pieces: CheckerboardPiece[]
+  pieces: CheckerboardPiece[],
+  yourUUID: CheckerboardPieceIdentity,
+  player: PlayerType
+  spectating: boolean
 }

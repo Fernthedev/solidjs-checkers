@@ -6,5 +6,5 @@ export interface CheckerboardPiece {
   position: number
   queen: boolean
   uuid: CheckerboardPieceIdentity
-  player: PlayerType | null
+  player: PlayerType
 }

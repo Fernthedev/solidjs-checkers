@@ -11,9 +11,12 @@ export class LobbySession {
     public readonly id: number,
     public readonly width: number,
     public readonly height: number
-  ) {}
+  ) {
+    setTimeout(() => this.destroyIfEmpty(), 1000 * 60)
+  }
 
   addPlayer(player: IPlayer) {
+    console.log("Played joined")
     if (this.session) {
       this.session.addSpectator(player)
       return
@@ -44,8 +47,6 @@ export class LobbySession {
       this.height,
       Object.values(this.players)
     )
-
-    setTimeout(this.destroyIfEmpty, 1000 * 60)
   }
 
   end() {

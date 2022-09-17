@@ -1,10 +1,9 @@
 import { Accessor, batch, createSignal, Setter } from "solid-js"
-import { createStore, produce, SetStoreFunction } from "solid-js/store"
+import { createStore, SetStoreFunction } from "solid-js/store"
 import {
   calculatePlayableSpots,
   canBeQueen,
   findKilled,
-  getCoordinates,
 } from "../../common/board_math"
 import {
   CheckerboardPiece,
@@ -23,8 +22,8 @@ export class LocalMultiplayer implements IMultiplayerCore {
   private setPieces: SetStoreFunction<PartialPieceType>
 
   constructor(
-    private width: number,
-    private height: number,
+    private readonly widthConst: number,
+    private readonly heightConst: number,
     pieces: CheckerboardPiece[]
   ) {
     const [p, sP] = createStore<PieceType>(
@@ -37,6 +36,17 @@ export class LocalMultiplayer implements IMultiplayerCore {
 
     this.pieces = p
     this.setPieces = sP as SetStoreFunction<PartialPieceType>
+  }
+  
+  get spectating(): Accessor<boolean> {
+    return () => false
+  }
+
+  get width(): Accessor<number> {
+    return () => this.widthConst
+  }
+  get height(): Accessor<number> {
+    return () => this.heightConst
   }
 
   getPieces(player?: PlayerType | undefined): Readonly<CheckerboardPiece[]> {
@@ -63,12 +73,17 @@ export class LocalMultiplayer implements IMultiplayerCore {
 
     if (
       !Array.from(
-        calculatePlayableSpots(piece, this.width, this.height, piecesValues)
+        calculatePlayableSpots(
+          piece,
+          this.widthConst,
+          this.heightConst,
+          piecesValues
+        )
       ).some((e) => e === square)
     )
       throw `Not a valid playable position! ${piece.position} to ${square}`
 
-    const killedPos = findKilled(piece.position, square, this.width)
+    const killedPos = findKilled(piece.position, square, this.widthConst)
     const killed = piecesValues.find((e) => e.position === killedPos)
 
     batch(() => {
@@ -76,7 +91,7 @@ export class LocalMultiplayer implements IMultiplayerCore {
         if (killed.player === piece.player)
           throw "You can't kill your own piece!"
 
-        this.kill(killed)
+        this.kill(killed.uuid)
       }
 
       this.moveToSquare(piece, square)
@@ -86,14 +101,14 @@ export class LocalMultiplayer implements IMultiplayerCore {
     console.log(`Moved ${piece.position} to ${square}, new turn ${this.turn()}`)
   }
 
-  kill(piece: CheckerboardPiece) {
-    this.setPieces(piece.uuid, undefined)
+  kill(piece: CheckerboardPieceIdentity) {
+    this.setPieces(piece, undefined)
   }
 
   moveToSquare(piece: CheckerboardPiece, newPosition: number) {
     const queen =
       piece.queen ||
-      canBeQueen(piece.player, newPosition, this.width, this.height)
+      canBeQueen(piece.player, newPosition, this.widthConst, this.heightConst)
 
     this.setPieces(piece.uuid, (p) => ({
       ...p,
@@ -105,8 +120,8 @@ export class LocalMultiplayer implements IMultiplayerCore {
   playablePositions(piece: CheckerboardPiece): Generator<number> {
     return calculatePlayableSpots(
       piece,
-      this.width,
-      this.height,
+      this.widthConst,
+      this.heightConst,
       Object.values(this.pieces)
     )
   }

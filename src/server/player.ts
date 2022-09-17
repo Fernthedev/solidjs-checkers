@@ -1,3 +1,4 @@
+import ws from "ws"
 import {
   CheckerboardPieceIdentity,
   CheckerboardPiece,
@@ -5,9 +6,9 @@ import {
 } from "../common/models"
 
 export interface IPlayer {
-  socket: WebSocket
+  socket: ws.WebSocket
   spectating: boolean
   uuid: number
-  player: PlayerType
+  player: PlayerType | null
   pieces: Record<CheckerboardPieceIdentity, CheckerboardPiece>
 }
