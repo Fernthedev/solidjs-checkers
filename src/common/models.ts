@@ -8,3 +8,7 @@ export interface CheckerboardPiece {
   uuid: CheckerboardPieceIdentity
   player: PlayerType
 }
+
+    export function piecesToMap(pieces: CheckerboardPiece[]) {
+      return Object.fromEntries(pieces.map((e) => [e.uuid, e]))
+    }

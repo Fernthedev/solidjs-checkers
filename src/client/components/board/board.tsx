@@ -71,6 +71,15 @@ export default function CheckerBoard(props: CheckerBoardProps) {
     })
   }
 
+  function onCircleClick(piece: CheckerboardPiece) {
+    if (
+      multiplayer().whosTurn() == piece.player &&
+      multiplayer().canTakeTurn() // for network
+    ) {
+      setSelectedPiece((p) => (p === piece ? null : piece))
+    }
+  }
+
   return (
     <>
       <div
@@ -110,14 +119,7 @@ export default function CheckerBoard(props: CheckerBoardProps) {
                         color={
                           piece.player === 0 ? Colors.player1 : Colors.player2
                         }
-                        onClick={
-                          multiplayer().whosTurn() == piece.player
-                            ? () =>
-                                setSelectedPiece((p) =>
-                                  p === piece ? null : piece
-                                )
-                            : undefined
-                        }
+                        onClick={() => onCircleClick(piece)}
                         radius={50}
                       />
                     )}

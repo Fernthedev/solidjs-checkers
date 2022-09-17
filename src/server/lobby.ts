@@ -41,6 +41,7 @@ export class LobbySession {
   }
 
   start() {
+    console.log("Started game")
     this.session ??= new GameSession(
       this.id,
       this.width,

@@ -8,6 +8,7 @@ import {
 import {
   CheckerboardPiece,
   CheckerboardPieceIdentity,
+  piecesToMap,
   PlayerType,
 } from "../../common/models"
 import { LOBBY_HEADER, readPacket } from "../../common/network/network"
@@ -37,7 +38,7 @@ export class NetworkMultiplayer implements IMultiplayerCore {
 
   private uuid: number = 0
 
-  private readonly socket: WebSocket
+  private socket!: WebSocket
 
   constructor(lobbyID: number) {
     const [p, sP] = createStore<PieceType>({})
@@ -67,28 +68,56 @@ export class NetworkMultiplayer implements IMultiplayerCore {
     this.playerType = playerType
     this.setPlayerType = setPlayerType
 
-    this.socket = new WebSocket(`ws://${window.location.hostname}:${window.location.port}/api`)
-    this.socket.addEventListener("open", () => {
-      console.log("Connected to websocket, joining lobby!")
-      const packet: InitialHandshakePacket = {
-        lobbyID: lobbyID,
-      }
-      this.socket.send(JSON.stringify(packet))
+    fetch("api/session/start", {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        width: 8,
+        height: 8,
+      }),
+      method: "POST",
+    }).then(() => {
+      this.socket = new WebSocket(
+        `ws://${window.location.hostname}:${window.location.port}/api`
+      )
+
+      this.socket.addEventListener("open", () => {
+        console.log("Connected to websocket, joining lobby!")
+        const packet: InitialHandshakePacket = {
+          lobbyID: lobbyID,
+        }
+        this.socket.send(JSON.stringify(packet))
+      })
+      this.socket.addEventListener("message", (e) => this.handlePacket(e.data))
     })
-    this.socket.addEventListener("message", (e) => this.handlePacket(e.data))
+  }
+  canTakeTurn(): Accessor<boolean> {
+    return () => this.whosTurn() === this.playerType()
   }
 
   handlePacket(data: any) {
     const packet = readPacket(data as string)
 
     batch(() => {
+      if (packet.serverError) {
+        console.error("Server responded with error!", packet.serverError.error)
+      }
+
       if (packet.sessionData) {
         this.setWidth(packet.sessionData.width)
         this.setHeight(packet.sessionData.height)
         this.setHeight(packet.sessionData.height)
         this.setPlayerType(packet.sessionData.player)
         this.setSpectating(packet.sessionData.spectating)
+        this.setPieces(piecesToMap(packet.sessionData.pieces))
         this.uuid = packet.sessionData.yourUUID
+      
+        console.log("session data", {
+          player: this.playerType(),
+          spectating: this.spectating()
+        })
       }
 
       if (packet.changeTurn) {

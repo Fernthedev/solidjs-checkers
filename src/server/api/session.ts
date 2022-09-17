@@ -7,13 +7,17 @@ import { createSession } from "../game_controller"
 
 const sessionRouter = express.Router()
 
-sessionRouter.post<{}, LobbyCreationResponse, LobbyCreationRequest>(
+sessionRouter.post<{}, LobbyCreationResponse | string, LobbyCreationRequest>(
   "/start",
   (req, res) => {
     const { width, height } = req.body
 
-    const lobby = createSession(width, height)
+    if (!width || !height) {
+      res.status(400).send("Provide width and height!")
+      return
+    }
 
+    const lobby = createSession(width, height)
     res.json({
       lobbyID: lobby.id,
     })

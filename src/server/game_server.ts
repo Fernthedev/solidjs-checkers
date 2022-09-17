@@ -1,12 +1,15 @@
+import ws from "ws"
 import {
   calculatePlayableSpots,
   canBeQueen,
   findKilled,
+  playerPieces,
 } from "../common/board_math"
 import {
   CheckerboardPieceIdentity,
   CheckerboardPiece,
   PlayerType,
+  piecesToMap,
 } from "../common/models"
 import { readPacket, writeToPlayer } from "../common/network/network"
 import { Packet } from "../common/network/packet"
@@ -24,7 +27,10 @@ export class GameSession {
     public height: number,
     public readonly players: IPlayer[]
   ) {
-    players.forEach(this.setupPlayer)
+    players[0].pieces = piecesToMap([...playerPieces(width, height, 0, false)])
+    players[1].pieces = piecesToMap([...playerPieces(width, height, 1, true)])
+
+    players.forEach((p) => this.setupPlayer(p))
   }
 
   private setupPlayer(player: IPlayer) {
@@ -32,7 +38,7 @@ export class GameSession {
       this.clientDisconnected(player)
     )
 
-    if (player.socket.readyState != WebSocket.OPEN) {
+    if (player.socket.readyState != ws.OPEN) {
       player.socket.addEventListener("open", () => this.sendSessionData(player))
     } else {
       this.sendSessionData(player)
@@ -82,7 +88,7 @@ export class GameSession {
       }
 
       if (packet.pieceMoved) {
-        this.takeTurn(packet.pieceMoved.uuid, packet.pieceMoved.newPosition)
+        this.takeTurn(packet.pieceMoved.uuid, packet.pieceMoved.newPosition, player)
       }
     } catch (e) {
       writeToPlayer(player, "serverError", {
@@ -107,7 +113,7 @@ export class GameSession {
     if (player.spectating) return
 
     this.players.forEach((e) => {
-      if (e.socket.readyState != WebSocket.OPEN) return
+      if (e.socket.readyState != ws.OPEN) return
 
       e.socket.close()
     })
@@ -126,13 +132,18 @@ export class GameSession {
     })
   }
 
-  takeTurn(pieceUUID: CheckerboardPieceIdentity, newPosition: number) {
+  getPlayersPieces(player: IPlayer) {
+    return Object.values(player.pieces)
+  }
+
+  takeTurn(pieceUUID: CheckerboardPieceIdentity, newPosition: number, player: IPlayer) {
     const pieces = this.players.flatMap((e) => Object.values(e.pieces))
     const piece = pieces.find((e) => e.uuid === pieceUUID)
 
     if (!piece) throw `Piece with uuid ${pieceUUID} not found!`
 
-    if (piece.player != this.turn) throw "Wrong player taking turn!"
+    if (!this.getPlayersPieces(player).some(e => e.uuid === pieceUUID)) throw "That is not your piece!"
+    if (piece.player !== this.turn) throw "Wrong player taking turn!"
 
     if (
       !Array.from(

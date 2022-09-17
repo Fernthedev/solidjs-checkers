@@ -9,6 +9,8 @@ export interface IMultiplayerCore {
 
   whosTurn(): PlayerType
 
+  canTakeTurn(): Accessor<boolean>
+
   local(): boolean
 
   takeTurn(piece: CheckerboardPiece, square: number): void

@@ -1,5 +1,4 @@
 import CheckerBoard from "../board/board"
-import { player1Pieces, player2Pieces } from "../../../common/board_math"
 import { LocalMultiplayer } from "../../logic/local_multiplayer"
 import PlayerText from "../board/player"
 import { createStore } from "solid-js/store"

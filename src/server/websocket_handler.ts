@@ -27,10 +27,5 @@ export function onWebSocketConnect(ws: ws.WebSocket, req: IncomingMessage) {
 
     const player = createPlayer(ws)
     session.addPlayer(player)
-    ws.send(
-      JSON.stringify({
-        uuid: player.uuid,
-      })
-    )
   })
 }
