@@ -68,15 +68,6 @@ export default function CheckerBoard(props: CheckerBoardProps) {
     })
   }
 
-  function onCircleClick(piece: CheckerboardPiece) {
-    if (
-      multiplayer().whosTurn() == piece.player &&
-      multiplayer().canTakeTurn() // for network
-    ) {
-      setSelectedPiece((p) => (p === piece ? null : piece))
-    }
-  }
-
   return (
     <>
       <div
@@ -109,17 +100,29 @@ export default function CheckerBoard(props: CheckerBoardProps) {
                   squareClass={squareClass()}
                 >
                   <Show when={piece} keyed>
-                    {(piece) => (
-                      <Circle
-                        queen={piece.queen}
-                        highlighted={selectedPiece() === piece}
-                        color={
-                          piece.player === 0 ? Colors.player1 : Colors.player2
-                        }
-                        onClick={[onCircleClick, piece]}
-                        radius={50}
-                      />
-                    )}
+                    {(piece) => {
+                      const circleInteractable = () =>
+                        multiplayer().whosTurn() == piece.player &&
+                        multiplayer().canTakeTurn() // for network
+
+                      return (
+                        <Circle
+                          queen={piece.queen}
+                          highlighted={selectedPiece() === piece}
+                          color={
+                            piece.player === 0 ? Colors.player1 : Colors.player2
+                          }
+                          interactable={circleInteractable()}
+                          onClick={() =>
+                            circleInteractable() &&
+                            setSelectedPiece((p) =>
+                              p === piece ? null : piece
+                            )
+                          }
+                          radius={50}
+                        />
+                      )
+                    }}
                   </Show>
                   <span
                     style={{
