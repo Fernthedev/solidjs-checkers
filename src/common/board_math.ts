@@ -87,6 +87,12 @@ export function canBeQueen(
   }
 }
 
+export function isPlayableSquare(square: number, width: number) {
+  const [column, row] = getCoordinates(square, width)
+
+  return column % 2 !== row % 2
+}
+
 export function* calculatePlayableSpots(
   piece: CheckerboardPiece,
   width: number,

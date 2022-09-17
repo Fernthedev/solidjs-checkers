@@ -1,10 +1,13 @@
 import { Accessor } from "solid-js"
-import { CheckerboardPiece, CheckerboardPieceIdentity, PlayerType } from "../../common/models"
-
+import {
+  CheckerboardPiece,
+  CheckerboardPieceIdentity,
+  PlayerType,
+} from "../../common/models"
 
 export interface IMultiplayerCore {
-  get width(): Accessor<number>;
-  get height(): Accessor<number>;
+  get width(): Accessor<number>
+  get height(): Accessor<number>
   get spectating(): Accessor<boolean>
 
   get whosTurn(): Accessor<PlayerType>
@@ -15,7 +18,7 @@ export interface IMultiplayerCore {
 
   takeTurn(piece: CheckerboardPiece, square: number): void
 
-  playablePositions(piece: CheckerboardPiece): Generator<number>
+  validMovesForPiece(piece: CheckerboardPiece): Generator<number>
 
   pieceAtLocation(square: number): CheckerboardPiece | null
 

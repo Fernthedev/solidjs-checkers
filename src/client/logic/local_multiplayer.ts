@@ -40,7 +40,7 @@ export class LocalMultiplayer implements IMultiplayerCore {
   get canTakeTurn(): Accessor<boolean> {
     return () => true
   }
-  
+
   get spectating(): Accessor<boolean> {
     return () => false
   }
@@ -118,7 +118,7 @@ export class LocalMultiplayer implements IMultiplayerCore {
     }))
   }
 
-  playablePositions(piece: CheckerboardPiece): Generator<number> {
+  validMovesForPiece(piece: CheckerboardPiece): Generator<number> {
     return calculatePlayableSpots(
       piece,
       this.widthConst,

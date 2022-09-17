@@ -186,7 +186,7 @@ export class NetworkMultiplayer implements IMultiplayerCore {
     }))
   }
 
-  playablePositions(piece: CheckerboardPiece): Generator<number> {
+  validMovesForPiece(piece: CheckerboardPiece): Generator<number> {
     return calculatePlayableSpots(
       piece,
       this.width(),

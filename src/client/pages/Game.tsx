@@ -8,19 +8,16 @@ import { IMultiplayerCore } from "../logic/multiplayer"
 import { NetworkMultiplayer } from "../logic/network_multiplayer"
 import { playerPieces } from "../../common/board_math"
 
-
 export default function Game() {
   const width = 8
   const height = 8
 
   const navigator = useNavigate()
 
-  const [multiplayer, setMultiplayer] = createStore<Readonly<IMultiplayerCore>>(
-    new LocalMultiplayer(width, height, [
-      ...playerPieces(width, height, 0, false),
-      ...playerPieces(width, height, 1, true),
-    ])
-  )
+  const multiplayer = new LocalMultiplayer(width, height, [
+    ...playerPieces(width, height, 0, false),
+    ...playerPieces(width, height, 1, true),
+  ])
 
   createEffect(() => {
     const pieces = Object.values(multiplayer.getPieces())
@@ -30,7 +27,6 @@ export default function Game() {
 
     navigator(`/game_over/${player1.length === 0 ? 1 : 0}`)
   })
-
 
   return (
     <>
