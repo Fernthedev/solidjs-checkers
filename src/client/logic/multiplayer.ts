@@ -7,9 +7,9 @@ export interface IMultiplayerCore {
   get height(): Accessor<number>;
   get spectating(): Accessor<boolean>
 
-  whosTurn(): PlayerType
+  get whosTurn(): Accessor<PlayerType>
 
-  canTakeTurn(): Accessor<boolean>
+  get canTakeTurn(): Accessor<boolean>
 
   local(): boolean
 

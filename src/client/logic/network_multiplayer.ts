@@ -93,7 +93,7 @@ export class NetworkMultiplayer implements IMultiplayerCore {
       this.socket.addEventListener("message", (e) => this.handlePacket(e.data))
     })
   }
-  canTakeTurn(): Accessor<boolean> {
+  get canTakeTurn(): Accessor<boolean> {
     return () => this.whosTurn() === this.playerType()
   }
 
@@ -152,8 +152,8 @@ export class NetworkMultiplayer implements IMultiplayerCore {
     return this.getPieces().find((e) => e.position === square) ?? null
   }
 
-  whosTurn(): PlayerType {
-    return this.turn()
+  get whosTurn(): Accessor<PlayerType> {
+    return () => this.turn()
   }
   local(): boolean {
     return false

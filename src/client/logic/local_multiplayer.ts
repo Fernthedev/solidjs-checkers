@@ -37,7 +37,7 @@ export class LocalMultiplayer implements IMultiplayerCore {
     this.pieces = p
     this.setPieces = sP as SetStoreFunction<PartialPieceType>
   }
-  canTakeTurn(): Accessor<boolean> {
+  get canTakeTurn(): Accessor<boolean> {
     return () => true
   }
   
