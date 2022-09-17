@@ -174,21 +174,24 @@ export class GameSession {
     this.turn = this.turn === 0 ? 1 : 0
 
     this.moveSquare(piece, newPosition)
-
-    const queen =
-      piece.queen ||
-      canBeQueen(piece.player, newPosition, this.width, this.height)
-
-    if (piece.queen != queen) {
-      this.sendPacketToAll("pieceQueen", {
-        uuid: piece.uuid,
-      })
-    }
+    this.makeQueen(piece)
 
     this.sendPacketToAll("changeTurn", {
       newTurn: this.turn,
     })
     this.checkGameOver()
+  }
+  makeQueen(piece: CheckerboardPiece) {
+    const queen =
+      piece.queen ||
+      canBeQueen(piece.player, piece.position, this.width, this.height)
+
+    if (piece.queen != queen) {
+      piece.queen = queen;
+      this.sendPacketToAll("pieceQueen", {
+        uuid: piece.uuid,
+      })
+    }
   }
 
   private moveSquare(piece: CheckerboardPiece, newPosition: number) {
