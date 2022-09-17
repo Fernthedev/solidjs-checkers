@@ -1,9 +1,9 @@
 import { Route, Router, Routes } from "@solidjs/router"
 import { render } from "solid-js/web"
-import Game from "./components/pages/Game"
-import GameOverPage from "./components/pages/GameOver"
-import MultiplayerGamePage from "./components/pages/MultiplayerGame"
-import MultiplayerSetupPage from "./components/pages/MultiplayerSetup"
+import Game from "./pages/Game"
+import GameOverPage from "./pages/GameOver"
+import MultiplayerGamePage from "./pages/MultiplayerGame"
+import MultiplayerSetupPage from "./pages/MultiplayerSetup"
 
 render(
   () => (

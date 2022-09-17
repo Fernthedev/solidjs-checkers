@@ -4,7 +4,7 @@ import { createResource, createSignal, Show } from "solid-js"
 import {
   LobbyCreationResponse,
   LobbyFindQuery,
-} from "../../../common/network/rest"
+} from "../../common/network/rest"
 
 export default function MultiplayerSetupPage() {
   const navigator = useNavigate()
@@ -42,7 +42,10 @@ export default function MultiplayerSetupPage() {
     onSuccess: async (response: any, context) => {
       navigator(`/multiplayer/${data().lobbyID}`)
     },
-    onError: (e) => (e as any).response.status === 404 ? { "error": "lobby not found" } : e as any,
+    onError: (e) =>
+      (e as any).response.status === 404
+        ? { error: "lobby not found" }
+        : (e as any),
   })
   // const [data, { mutate, refetch }] = createResource((e) => {
 
@@ -57,19 +60,18 @@ export default function MultiplayerSetupPage() {
 
         <br />
 
-        <Show when={data()} keyed>
-          {(data) => <span>{JSON.stringify(data)}</span>}
-        </Show>
-
-        <Show when={errors() as FelteSubmitError | {error: string | undefined} | undefined} keyed>
+        <Show
+          when={
+            errors() as
+              | FelteSubmitError
+              | { error: string | undefined }
+              | undefined
+          }
+          keyed
+        >
           {(messages) => (
             <pre>
-              <Show
-                when={(messages as any)?.error}
-                fallback={JSON.stringify(messages)}
-              >
-                Lobby not found
-              </Show>
+              <Show when={(messages as any)?.error}>Lobby not found</Show>
             </pre>
           )}
         </Show>

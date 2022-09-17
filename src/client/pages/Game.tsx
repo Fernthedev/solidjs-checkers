@@ -1,12 +1,12 @@
-import CheckerBoard from "../board/board"
-import { LocalMultiplayer } from "../../logic/local_multiplayer"
-import PlayerText from "../board/player"
+import CheckerBoard from "../components/board/board"
+import { LocalMultiplayer } from "../logic/local_multiplayer"
+import PlayerText from "../components/board/player"
 import { createStore } from "solid-js/store"
 import { createEffect } from "solid-js"
 import { Link, useNavigate } from "@solidjs/router"
-import { IMultiplayerCore } from "../../logic/multiplayer"
-import { NetworkMultiplayer } from "../../logic/network_multiplayer"
-import { playerPieces } from "../../../common/board_math"
+import { IMultiplayerCore } from "../logic/multiplayer"
+import { NetworkMultiplayer } from "../logic/network_multiplayer"
+import { playerPieces } from "../../common/board_math"
 
 
 export default function Game() {
