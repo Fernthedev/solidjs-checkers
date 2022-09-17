@@ -13,7 +13,7 @@ export interface MultiplayerGamePageParams extends Params {
 export default function MultiplayerGamePage() {
   const params = useParams<MultiplayerGamePageParams>()
 
-  const [multiplayer, setMultiplayer] = createStore(new NetworkMultiplayer(20))
+  const [multiplayer, setMultiplayer] = createStore(new NetworkMultiplayer(parseInt(params.lobbyID)))
 
   return (
     <>
