@@ -90,7 +90,7 @@ export class NetworkMultiplayer implements IMultiplayerCore {
     this.socket.addEventListener("message", (e) => this.handlePacket(e.data))
   }
   get canTakeTurn(): Accessor<boolean> {
-    return () => this.whosTurn() === this.playerType()
+    return () => !this.spectating() && this.whosTurn() === this.playerType()
   }
 
   handlePacket(data: any) {
