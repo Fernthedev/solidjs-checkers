@@ -27,8 +27,16 @@ export class GameSession {
     public height: number,
     public readonly players: IPlayer[]
   ) {
-    players[0].pieces = piecesToMap([...playerPieces(width, height, 0, false)])
-    players[1].pieces = piecesToMap([...playerPieces(width, height, 1, true)])
+    players.find((e) => e.player === 0 && !e.spectating)!.pieces = piecesToMap([
+      ...playerPieces(width, height, 0, false),
+    ])
+    players.find((e) => e.player === 1 && !e.spectating)!.pieces = piecesToMap([
+      ...playerPieces(width, height, 1, true),
+    ])
+    console.log([
+      Object.keys(players[0].pieces),
+      Object.keys(players[1].pieces),
+    ])
 
     players.forEach((p) => this.setupPlayer(p))
   }
@@ -88,7 +96,11 @@ export class GameSession {
       }
 
       if (packet.pieceMoved) {
-        this.takeTurn(packet.pieceMoved.uuid, packet.pieceMoved.newPosition, player)
+        this.takeTurn(
+          packet.pieceMoved.uuid,
+          packet.pieceMoved.newPosition,
+          player
+        )
       }
     } catch (e) {
       writeToPlayer(player, "serverError", {
@@ -136,14 +148,19 @@ export class GameSession {
     return Object.values(player.pieces)
   }
 
-  takeTurn(pieceUUID: CheckerboardPieceIdentity, newPosition: number, player: IPlayer) {
-    const pieces = this.players.flatMap((e) => Object.values(e.pieces))
-    const piece = pieces.find((e) => e.uuid === pieceUUID)
+  takeTurn(
+    pieceUUID: CheckerboardPieceIdentity,
+    newPosition: number,
+    player: IPlayer
+  ) {
+    console.log(typeof pieceUUID)
+    const piece = player.pieces[pieceUUID]
 
-    if (!piece) throw `Piece with uuid ${pieceUUID} not found!`
-
-    if (!this.getPlayersPieces(player).some(e => e.uuid === pieceUUID)) throw "That is not your piece!"
+    if (!piece)
+      throw `Piece with uuid ${pieceUUID} not found for player ${player.player}!`
     if (piece.player !== this.turn) throw "Wrong player taking turn!"
+
+    const pieces = this.players.flatMap((e) => Object.values(e.pieces))
 
     if (
       !Array.from(

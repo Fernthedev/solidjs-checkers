@@ -1,4 +1,5 @@
 import { runWithOwner } from "solid-js"
+import { getRandomInt } from "../server/game_controller"
 import { CheckerboardPiece, PlayerType } from "./models"
 
 
@@ -15,7 +16,7 @@ export function* playerPieces(
   for (let i = 0; i < width; i++) {
     const [column, row] = spots.next().value!
 
-    const id = Math.random()
+    const id = getRandomInt()
 
     yield {
       position: column + row * width,

@@ -36,6 +36,9 @@ export class NetworkMultiplayer implements IMultiplayerCore {
   private readonly setSpectating: Setter<boolean>
   private readonly setPlayerType: Setter<number>
 
+  public readonly setup: Accessor<boolean>
+  private readonly setSetup: Setter<boolean>
+
   private uuid: number = 0
 
   private socket!: WebSocket
@@ -49,6 +52,11 @@ export class NetworkMultiplayer implements IMultiplayerCore {
 
     const [spectating, setSpectating] = createSignal(false)
     const [playerType, setPlayerType] = createSignal<PlayerType>(0)
+
+    const [setup, setSetup] = createSignal(false)
+
+    this.setup = setup
+    this.setSetup = setSetup
 
     this.width = w
     this.setWidth = setW
@@ -102,10 +110,16 @@ export class NetworkMultiplayer implements IMultiplayerCore {
         this.setPieces(piecesToMap(packet.sessionData.pieces))
         this.uuid = packet.sessionData.yourUUID
 
+        this.setSetup(true)
+
         console.log("session data", {
           player: this.playerType(),
           spectating: this.spectating(),
         })
+      }
+
+      if (packet.pieceKilled) {
+        this.kill(packet.pieceKilled.uuid)
       }
 
       if (packet.changeTurn) {
@@ -152,6 +166,8 @@ export class NetworkMultiplayer implements IMultiplayerCore {
       uuid: piece.uuid,
       newPosition: square,
     })
+
+    console.log("Pieces", Object.entries(this.pieces).filter(e => e[1].player === this.playerType()).map(e => e[0]))
   }
 
   kill(piece: CheckerboardPieceIdentity) {
