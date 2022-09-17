@@ -2,12 +2,12 @@ import { batch, createMemo, createSignal, For, Show } from "solid-js"
 
 import { availableCircleSpots } from "../../../common/board_math"
 import { Colors } from "../../colorscheme"
-import { IMultiplayerCore as IMultiplayerCore } from "../../logic/multiplayer"
 import { CheckerboardPiece } from "../../../common/models"
 import Circle from "./circle"
 import Square from "./square"
 
 import "./board.css"
+import { IMultiplayerCore } from "../../logic/multiplayer"
 
 interface CheckerBoardProps {
   width: number

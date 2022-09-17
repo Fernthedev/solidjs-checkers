@@ -6,10 +6,14 @@ import {
   findKilled,
   getCoordinates,
 } from "../../common/board_math"
-import { CheckerboardPiece } from "../../common/models"
-import { IMultiplayerCore, PlayerType } from "./multiplayer"
+import {
+  CheckerboardPiece,
+  CheckerboardPieceIdentity,
+  PlayerType,
+} from "../../common/models"
+import { IMultiplayerCore } from "./multiplayer"
 
-type PieceType = Record<number, CheckerboardPiece>
+type PieceType = Record<CheckerboardPieceIdentity, CheckerboardPiece>
 type PartialPieceType = Partial<PieceType>
 
 export class LocalMultiplayer implements IMultiplayerCore {
@@ -24,7 +28,7 @@ export class LocalMultiplayer implements IMultiplayerCore {
     pieces: CheckerboardPiece[]
   ) {
     const [p, sP] = createStore<PieceType>(
-      Object.fromEntries(pieces.map((e) => [e.position, e]))
+      Object.fromEntries(pieces.map((e) => [e.uuid, e]))
     )
     const [t, setT] = createSignal<PlayerType>(0)
 
@@ -35,20 +39,14 @@ export class LocalMultiplayer implements IMultiplayerCore {
     this.setPieces = sP as SetStoreFunction<PartialPieceType>
   }
 
-  getPieces(
-    player?: PlayerType | undefined
-  ): Readonly<Record<number, CheckerboardPiece>> {
-    if (!player) return this.pieces
+  getPieces(player?: PlayerType | undefined): Readonly<CheckerboardPiece[]> {
+    if (!player) return Object.values(this.pieces)
 
-    return Object.fromEntries(
-      Object.values(this.pieces)
-        .filter((p) => p.player === player)
-        .map((e) => [e!.position, e])
-    )
+    return Object.values(this.pieces).filter((p) => p.player === player)
   }
 
   pieceAtLocation(square: number): CheckerboardPiece | null {
-    return this.pieces[square] ?? null
+    return this.getPieces().find((e) => e.position === square) ?? null
   }
 
   whosTurn(): PlayerType {
@@ -61,7 +59,7 @@ export class LocalMultiplayer implements IMultiplayerCore {
   takeTurn(piece: CheckerboardPiece, square: number): void {
     if (piece.player != this.turn()) throw "Wrong player taking turn!"
 
-    const piecesValues = Object.values(this.pieces)
+    const piecesValues = this.getPieces()
 
     if (
       !Array.from(
@@ -89,27 +87,19 @@ export class LocalMultiplayer implements IMultiplayerCore {
   }
 
   kill(piece: CheckerboardPiece) {
-    this.setPieces(piece.position, undefined)
+    this.setPieces(piece.uuid, undefined)
   }
 
   moveToSquare(piece: CheckerboardPiece, newPosition: number) {
-    /// Delete old position
-    this.setPieces(
-      produce((p) => {
-        delete p[piece.position]
+    const queen =
+      piece.queen ||
+      canBeQueen(piece.player, newPosition, this.width, this.height)
 
-        const queen =
-          piece.queen ||
-          canBeQueen(piece.player, newPosition, this.width, this.height)
-
-        /// New position
-        p[newPosition] = {
-          ...piece,
-          queen: queen,
-          position: newPosition,
-        }
-      })
-    )
+    this.setPieces(piece.uuid, (p) => ({
+      ...p,
+      queen: queen,
+      position: newPosition,
+    }))
   }
 
   playablePositions(piece: CheckerboardPiece): Generator<number> {
