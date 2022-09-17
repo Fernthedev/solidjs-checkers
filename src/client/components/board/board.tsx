@@ -108,7 +108,7 @@ export default function CheckerBoard(props: CheckerBoardProps) {
 
               return (
                 <Square
-                  onClick={() => onSquareClick(index())}
+                  onClick={[onSquareClick, index()]}
                   squareClass={squareClass()}
                 >
                   <Show when={piece} keyed>
@@ -119,7 +119,7 @@ export default function CheckerBoard(props: CheckerBoardProps) {
                         color={
                           piece.player === 0 ? Colors.player1 : Colors.player2
                         }
-                        onClick={() => onCircleClick(piece)}
+                        onClick={[onCircleClick, piece]}
                         radius={50}
                       />
                     )}
