@@ -100,8 +100,6 @@ export class LocalMultiplayer implements IMultiplayerCore {
       this.moveToSquare(piece, square)
       this.setTurn((t) => (t === 0 ? 1 : 0))
     })
-
-    console.log(`Moved ${piece.position} to ${square}, new turn ${this.turn()}`)
   }
 
   kill(piece: CheckerboardPieceIdentity) {

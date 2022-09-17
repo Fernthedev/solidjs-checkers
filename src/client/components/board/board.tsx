@@ -48,7 +48,6 @@ export default function CheckerBoard(props: CheckerBoardProps) {
     const piece = selectedPiece()
     const result = piece && Array.from(multiplayer().playablePositions(piece))
 
-    console.log(result)
     return result
   })
 
@@ -62,8 +61,6 @@ export default function CheckerBoard(props: CheckerBoardProps) {
     batch(() => {
       const oldPosition = piece.position
       const newPosition = squareId
-
-      console.log("Old location", oldPosition, "new location", newPosition)
 
       /// Move to new location
       multiplayer().takeTurn(piece, newPosition)

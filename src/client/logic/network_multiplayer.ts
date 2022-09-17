@@ -166,8 +166,6 @@ export class NetworkMultiplayer implements IMultiplayerCore {
       uuid: piece.uuid,
       newPosition: square,
     })
-
-    console.log("Pieces", Object.entries(this.pieces).filter(e => e[1].player === this.playerType()).map(e => e[0]))
   }
 
   kill(piece: CheckerboardPieceIdentity) {

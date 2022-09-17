@@ -33,10 +33,6 @@ export class GameSession {
     players.find((e) => e.player === 1 && !e.spectating)!.pieces = piecesToMap([
       ...playerPieces(width, height, 1, true),
     ])
-    console.log([
-      Object.keys(players[0].pieces),
-      Object.keys(players[1].pieces),
-    ])
 
     players.forEach((p) => this.setupPlayer(p))
   }
@@ -153,7 +149,6 @@ export class GameSession {
     newPosition: number,
     player: IPlayer
   ) {
-    console.log(typeof pieceUUID)
     const piece = player.pieces[pieceUUID]
 
     if (!piece)

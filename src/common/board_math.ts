@@ -131,7 +131,7 @@ export function* calculatePlayableSpots(
     if (conflictingPiece) {
       // left
       // modulus to get column
-      console.log(conflictingPiece.position % width, square % width)
+      // console.log(conflictingPiece.position % width, square % width)
       if (conflictingPiece.position % width < square % width) {
         yield* yieldClamp(column - 1, row - 1)
         yield* yieldClamp(column - 1, row + 1)
