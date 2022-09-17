@@ -1,6 +1,6 @@
 .checker-grid {
-  width: 89vmin;
-  height: 89vmin;
+  width: 82vmin;
+  height: 82vmin;
   display: grid;
   outline: #393939 solid 0.5rem;
 }

@@ -68,30 +68,18 @@ export class NetworkMultiplayer implements IMultiplayerCore {
     this.playerType = playerType
     this.setPlayerType = setPlayerType
 
-    fetch("api/session/start", {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        width: 8,
-        height: 8,
-      }),
-      method: "POST",
-    }).then(() => {
-      this.socket = new WebSocket(
-        `ws://${window.location.hostname}:${window.location.port}/api`
-      )
+    this.socket = new WebSocket(
+      `ws://${window.location.hostname}:${window.location.port}/api`
+    )
 
-      this.socket.addEventListener("open", () => {
-        console.log("Connected to websocket, joining lobby!")
-        const packet: InitialHandshakePacket = {
-          lobbyID: lobbyID,
-        }
-        this.socket.send(JSON.stringify(packet))
-      })
-      this.socket.addEventListener("message", (e) => this.handlePacket(e.data))
+    this.socket.addEventListener("open", () => {
+      console.log("Connected to websocket, joining lobby!")
+      const packet: InitialHandshakePacket = {
+        lobbyID: lobbyID,
+      }
+      this.socket.send(JSON.stringify(packet))
     })
+    this.socket.addEventListener("message", (e) => this.handlePacket(e.data))
   }
   get canTakeTurn(): Accessor<boolean> {
     return () => this.whosTurn() === this.playerType()
@@ -113,10 +101,10 @@ export class NetworkMultiplayer implements IMultiplayerCore {
         this.setSpectating(packet.sessionData.spectating)
         this.setPieces(piecesToMap(packet.sessionData.pieces))
         this.uuid = packet.sessionData.yourUUID
-      
+
         console.log("session data", {
           player: this.playerType(),
-          spectating: this.spectating()
+          spectating: this.spectating(),
         })
       }
 

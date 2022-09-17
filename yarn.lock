@@ -310,6 +310,25 @@
   resolved "https://registry.yarnpkg.com/@esbuild/linux-loong64/-/linux-loong64-0.15.7.tgz#1ec4af4a16c554cbd402cc557ccdd874e3f7be53"
   integrity sha512-IKznSJOsVUuyt7cDzzSZyqBEcZe+7WlBqTVXiF1OXP/4Nm387ToaXZ0fyLwI1iBlI/bzpxVq411QE2/Bt2XWWw==
 
+"@felte/common@1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@felte/common/-/common-1.1.2.tgz#02979e91f0182af15052799a2bad411c4d030bf2"
+  integrity sha512-RNSuI+x5BG7oocz0uY+jdkxYRFlRR/C4PZTvfi4mx9U23LzhNSSRG7gPhbQgO75L5YTB1lPwFKJry4uiVXxtwA==
+
+"@felte/core@1.3.3", "@felte/core@^1.3.3":
+  version "1.3.3"
+  resolved "https://registry.yarnpkg.com/@felte/core/-/core-1.3.3.tgz#99e2fc1f176c458558f42e9b9a5df17d9c69ece1"
+  integrity sha512-RcK3VBx6CL8O37tw8mWS44pfYkJQdxraT+eO5yHr9AjDpeqF4n864AcXnX7r6ists1EFXCXGMLSRrvY99cLFzw==
+  dependencies:
+    "@felte/common" "1.1.2"
+
+"@felte/solid@^1.2.3":
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/@felte/solid/-/solid-1.2.3.tgz#b3369eb015b8411fbc7ef9e63a602f974ddc2c34"
+  integrity sha512-Ieyj/LW9tueD+XB1t5C4B6a+D17B1wdiNHH1j9Vjl+dVZtfKngkNdxuzfwaaMv1ASRiBkWMMWQjoy3wwMdXevQ==
+  dependencies:
+    "@felte/core" "1.3.3"
+
 "@jest/expect-utils@^29.0.3":
   version "29.0.3"
   resolved "https://registry.yarnpkg.com/@jest/expect-utils/-/expect-utils-29.0.3.tgz#f5bb86f5565bf2dacfca31ccbd887684936045b2"

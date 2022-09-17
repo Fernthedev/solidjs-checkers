@@ -5,8 +5,8 @@ import { IPlayer } from "./player"
 const sessions: Record<number, LobbySession> = {}
 
 export function getRandomInt(
-  min = Number.MIN_SAFE_INTEGER,
-  max = Number.MAX_SAFE_INTEGER
+  min = Number.MIN_SAFE_INTEGER / 1000000000,
+  max = Number.MAX_SAFE_INTEGER / 1000000000
 ) {
   min = Math.ceil(min)
   max = Math.floor(max)
