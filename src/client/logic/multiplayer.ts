@@ -1,9 +1,8 @@
-import { CheckerboardPiece } from "../models"
+import { CheckerboardPiece, PlayerType } from "../../common/models"
 
-export type Player = 0 | 1
 
 export interface IMultiplayerCore {
-  whosTurn(): Player
+  whosTurn(): PlayerType
 
   local(): boolean
 
@@ -13,5 +12,5 @@ export interface IMultiplayerCore {
 
   pieceAtLocation(square: number): CheckerboardPiece | null
 
-  getPieces(player?: Player): Readonly<Record<number, CheckerboardPiece>>
+  getPieces(player?: PlayerType): Readonly<Record<number, CheckerboardPiece>>
 }

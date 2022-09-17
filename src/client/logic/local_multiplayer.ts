@@ -5,16 +5,16 @@ import {
   canBeQueen,
   findKilled,
   getCoordinates,
-} from "../board_math"
-import { CheckerboardPiece } from "../models"
-import { IMultiplayerCore, Player } from "./multiplayer"
+} from "../../common/board_math"
+import { CheckerboardPiece } from "../../common/models"
+import { IMultiplayerCore, PlayerType } from "./multiplayer"
 
 type PieceType = Record<number, CheckerboardPiece>
 type PartialPieceType = Partial<PieceType>
 
 export class LocalMultiplayer implements IMultiplayerCore {
-  private turn: Accessor<Player>
-  private setTurn: Setter<Player>
+  private turn: Accessor<PlayerType>
+  private setTurn: Setter<PlayerType>
   private pieces: Readonly<PieceType>
   private setPieces: SetStoreFunction<PartialPieceType>
 
@@ -26,7 +26,7 @@ export class LocalMultiplayer implements IMultiplayerCore {
     const [p, sP] = createStore<PieceType>(
       Object.fromEntries(pieces.map((e) => [e.position, e]))
     )
-    const [t, setT] = createSignal<Player>(0)
+    const [t, setT] = createSignal<PlayerType>(0)
 
     this.turn = t
     this.setTurn = setT
@@ -36,7 +36,7 @@ export class LocalMultiplayer implements IMultiplayerCore {
   }
 
   getPieces(
-    player?: Player | undefined
+    player?: PlayerType | undefined
   ): Readonly<Record<number, CheckerboardPiece>> {
     if (!player) return this.pieces
 
@@ -51,7 +51,7 @@ export class LocalMultiplayer implements IMultiplayerCore {
     return this.pieces[square] ?? null
   }
 
-  whosTurn(): Player {
+  whosTurn(): PlayerType {
     return this.turn()
   }
   local(): boolean {

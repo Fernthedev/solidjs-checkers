@@ -1,5 +1,5 @@
 import { runWithOwner } from "solid-js"
-import { Player } from "./logic/multiplayer"
+import { PlayerType } from "../client/logic/multiplayer"
 import { CheckerboardPiece } from "./models"
 
 export function* availableCircleSpots(width: number, height: number) {
@@ -22,7 +22,7 @@ export function getCoordinates(square: number, width: number) {
   return [square % width, Math.floor(square / width)]
 }
 
-export function getDirection(player: Player) {
+export function getDirection(player: PlayerType) {
   return player === 0 ? 1 : -1
 }
 
@@ -46,7 +46,7 @@ export function findKilled(
 }
 
 export function canBeQueen(
-  player: Player,
+  player: PlayerType,
   position: number,
   width: number,
   height: number

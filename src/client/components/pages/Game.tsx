@@ -1,12 +1,12 @@
-import CheckerBoard from "../components/board/board"
-import { availableCircleSpots } from "../board_math"
-import { CheckerboardPiece } from "../models"
-import { LocalMultiplayer } from "../logic/local_multiplayer"
-import PlayerText from "../components/board/player"
+import CheckerBoard from "../board/board"
+import { availableCircleSpots } from "../../../common/board_math"
+import { CheckerboardPiece } from "../../../common/models"
+import { LocalMultiplayer } from "../../logic/local_multiplayer"
+import PlayerText from "../board/player"
 import { createStore } from "solid-js/store"
 import { createEffect } from "solid-js"
 import { useNavigate } from "@solidjs/router"
-import { IMultiplayerCore } from "../logic/multiplayer"
+import { IMultiplayerCore } from "../../logic/multiplayer"
 
 function* player1Pieces(
   width: number,

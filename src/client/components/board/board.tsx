@@ -1,9 +1,9 @@
 import { batch, createMemo, createSignal, For, Show } from "solid-js"
 
-import { availableCircleSpots } from "../../board_math"
+import { availableCircleSpots } from "../../../common/board_math"
 import { Colors } from "../../colorscheme"
 import { IMultiplayerCore as IMultiplayerCore } from "../../logic/multiplayer"
-import { CheckerboardPiece } from "../../models"
+import { CheckerboardPiece } from "../../../common/models"
 import Circle from "./circle"
 import Square from "./square"
 
