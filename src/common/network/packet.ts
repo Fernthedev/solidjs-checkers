@@ -18,7 +18,9 @@ interface ServerError {
   error: string
 }
 
-interface GameSessionClosed {}
+interface GameSessionClosed {
+  winner: number| null
+}
 
 interface PieceQueen {
   uuid: CheckerboardPieceIdentity

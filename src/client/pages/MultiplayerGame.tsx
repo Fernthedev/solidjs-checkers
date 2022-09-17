@@ -1,4 +1,4 @@
-import { Link, Params, useParams } from "@solidjs/router"
+import { Link, Params, useNavigate, useParams } from "@solidjs/router"
 import { Show } from "solid-js"
 import { createStore } from "solid-js/store"
 import { IMultiplayerCore } from "../logic/multiplayer"
@@ -15,7 +15,11 @@ export interface MultiplayerGamePageParams extends Params {
 export default function MultiplayerGamePage() {
   const params = useParams<MultiplayerGamePageParams>()
 
-  const multiplayer = new NetworkMultiplayer(parseInt(params.lobbyID))
+  const navigator = useNavigate()
+
+  const multiplayer = new NetworkMultiplayer(parseInt(params.lobbyID), () =>
+    navigator("/game_over/")
+  )
   
 
   return (

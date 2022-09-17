@@ -74,8 +74,11 @@ export class GameSession {
       return
     }
 
-    this.sendPacketToAll("sessionClosed", {})
-    this.players.forEach((e) => e.socket.close())
+    console.log("Game over!")
+    this.sendPacketToAll("sessionClosed", {
+      winner: Object.values(player0 ?? []).length === 0 ? 1 : 0,
+    })
+    this.players.forEach((e) => e.socket.terminate())
     removeSession(this.id)
   }
 
@@ -187,7 +190,7 @@ export class GameSession {
       canBeQueen(piece.player, piece.position, this.width, this.height)
 
     if (piece.queen != queen) {
-      piece.queen = queen;
+      piece.queen = queen
       this.sendPacketToAll("pieceQueen", {
         uuid: piece.uuid,
       })

@@ -43,7 +43,7 @@ export class NetworkMultiplayer implements IMultiplayerCore {
 
   private socket!: WebSocket
 
-  constructor(lobbyID: number) {
+  constructor(lobbyID: number, private readonly onGameEnd: (player_id: number) => any) {
     const [p, sP] = createStore<PieceType>({})
     const [t, setT] = createSignal<PlayerType>(0)
 
@@ -116,6 +116,10 @@ export class NetworkMultiplayer implements IMultiplayerCore {
           player: this.playerType(),
           spectating: this.spectating(),
         })
+      }
+
+      if (packet.sessionClosed) {
+        this.onGameEnd(packet.sessionClosed.winner ?? -1)
       }
 
       if (packet.pieceKilled) {
