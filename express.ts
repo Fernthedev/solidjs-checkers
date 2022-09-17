@@ -4,6 +4,7 @@ import { fileURLToPath } from "url"
 import express from "express"
 import router from "./src/server/api/routes"
 import ws from "ws"
+import { onWebSocketConnect } from "./src/server/websocket_handler"
 
 const { PORT = 5173 } = process.env
 
@@ -13,7 +14,6 @@ export let wsServer: ws.Server
 
 async function createServer() {
   const app = express()
-
 
   wsServer = new ws.Server({ noServer: true })
 
@@ -37,9 +37,11 @@ async function createServer() {
   server.on("upgrade", (request, socket, head) => {
     wsServer.handleUpgrade(request, socket, head, (socket) => {
       wsServer.emit("connection", socket, request)
+
+      // I hate this
+      onWebSocketConnect(socket as any)
     })
   })
 }
 
 createServer()
-

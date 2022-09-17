@@ -1,6 +1,5 @@
 import { runWithOwner } from "solid-js"
-import { PlayerType } from "../client/logic/multiplayer"
-import { CheckerboardPiece } from "./models"
+import { CheckerboardPiece, PlayerType } from "./models"
 
 export function* availableCircleSpots(width: number, height: number) {
   // I am too lazy to find a proper algorithm/formula for this
@@ -14,7 +13,7 @@ export function* availableCircleSpots(width: number, height: number) {
   }
 }
 
-export function getPosition([column, row]: [number, number], width: number) {
+export function getPosition([column, row]: readonly [number, number], width: number) {
   return column + row * width
 }
 
@@ -66,7 +65,7 @@ export function* calculatePlayableSpots(
   piece: CheckerboardPiece,
   width: number,
   height: number,
-  pieces: CheckerboardPiece[]
+  pieces: readonly CheckerboardPiece[]
 ) {
   const square = piece.position
   const queen = piece.queen
