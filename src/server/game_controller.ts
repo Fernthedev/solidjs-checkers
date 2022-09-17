@@ -6,7 +6,7 @@ const sessions: Record<number, LobbySession> = {}
 
 export function getRandomInt(
   min = 0,
-  max = Number.MAX_SAFE_INTEGER / 1000000000
+  max = Math.pow(2, 16)
 ) {
   min = Math.ceil(min)
   max = Math.floor(max)
@@ -27,7 +27,7 @@ export function createSession(
   width: number,
   height: number
 ): LobbySession {
-  let id = 20;  // getRandomInt()
+  let id = getRandomInt();  // getRandomInt()
   while (Object.hasOwn(sessions, id)) {
     id = getRandomInt()
   }
