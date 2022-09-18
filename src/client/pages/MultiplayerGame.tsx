@@ -27,8 +27,8 @@ export default function MultiplayerGamePage() {
 
   const navigator = useNavigate()
 
-  const multiplayer = new NetworkMultiplayer(parseInt(params.lobbyID), () =>
-    navigator("/game_over/")
+  const multiplayer = new NetworkMultiplayer(parseInt(params.lobbyID), (winner) =>
+    navigator(`/game_over/${winner}`)
   )
 
   return (
