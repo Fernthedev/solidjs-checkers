@@ -5,6 +5,7 @@ import {
   LobbyCreationResponse,
   LobbyFindQuery,
 } from "../../common/network/rest"
+import LoadingSpinner from "../components/loading"
 
 export default function MultiplayerSetupPage() {
   const navigator = useNavigate()
@@ -38,7 +39,7 @@ export default function MultiplayerSetupPage() {
     navigator(`/multiplayer/${responseData.lobbyID}`)
   }
 
-  const { form, errors, data } = createForm<LobbyFindQuery>({
+  const { form, errors, data, isSubmitting } = createForm<LobbyFindQuery>({
     onSuccess: async (response: any, context) => {
       navigator(`/multiplayer/${data().lobbyID}`)
     },
@@ -52,11 +53,24 @@ export default function MultiplayerSetupPage() {
   // })
 
   return (
-    <div>
-      <button onClick={doHost}>Host</button>
+    <div class="place-content-center gap-4 flex items-center flex-col">
+      <button class="btn btn-accent m-5 mt-10" onClick={doHost}>
+        Host
+      </button>
+
+      <br />
+
       <form use:form action="/api/session/find" method="get">
-        <input type="number" name="lobbyID" id={"lobbyID"} />
-        <button type="submit">Join</button>
+        <input
+          placeholder="Session code"
+          class="input input-bordered input-primary"
+          name="lobbyID"
+          id={"lobbyID"}
+        />
+
+        <button class="btn m-5" type="submit">
+          Join
+        </button>
 
         <br />
 
@@ -74,6 +88,12 @@ export default function MultiplayerSetupPage() {
               <Show when={(messages as any)?.error}>Lobby not found</Show>
             </pre>
           )}
+        </Show>
+
+        <Show when={isSubmitting()}>
+          <div class="mx-auto flex items-center flex-col h-20 w-20">
+            <LoadingSpinner />
+          </div>
         </Show>
       </form>
     </div>

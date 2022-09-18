@@ -7,5 +7,9 @@ interface GameOverParams extends Params {
 export default function GameOverPage() {
   const params = useParams<GameOverParams>()
 
-  return <h1>The winner is Player {parseInt(params.player) + 1}</h1>
+  return (
+    <div class="center prose">
+      <h2 class="text-3xl">The winner is Player {parseInt(params.player) + 1}</h2>
+    </div>
+  )
 }

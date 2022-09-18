@@ -31,7 +31,11 @@ export default function Game() {
   return (
     <>
       <PlayerText multiplayer={multiplayer} />
-      <Link href={"/multiplayer_setup"} style={{ "text-align": "center" }}>
+      <Link
+        class="text-sky-400"
+        href={"/multiplayer_setup"}
+        style={{ "text-align": "center" }}
+      >
         <h4>Online Multiplayer</h4>
       </Link>
       <CheckerBoard width={width} height={height} multiplayer={multiplayer} />

@@ -43,7 +43,10 @@ export class NetworkMultiplayer implements IMultiplayerCore {
 
   private socket!: WebSocket
 
-  constructor(lobbyID: number, private readonly onGameEnd: (player_id: number) => any) {
+  constructor(
+    lobbyID: number,
+    private readonly onGameEnd: (player_id: number) => any
+  ) {
     const [p, sP] = createStore<PieceType>({})
     const [t, setT] = createSignal<PlayerType>(0)
 
@@ -159,7 +162,7 @@ export class NetworkMultiplayer implements IMultiplayerCore {
   }
 
   get whosTurn(): Accessor<PlayerType> {
-    return () => this.turn()
+    return this.turn
   }
   local(): boolean {
     return false
