@@ -10,7 +10,7 @@
     "run_server": "node --experimental-specifier-resolution=node ./dist/express.js",
     "build:client": "vite build --outDir dist/app",
     "build:server": "tsc -p ./tsconfig.express.json",
-    "build": "yarn tsc --build --dry && yarn build:client && yarn build:server",
+    "build": "./node_modules/.bin/tsc --build --dry && yarn build:client && yarn build:server",
     "serve": "vite preview",
     "test": "vitest"
   },
