@@ -1,7 +1,11 @@
-import { runWithOwner } from "solid-js"
-import { getRandomInt } from "../server/game_controller"
 import { CheckerboardPiece, PlayerType } from "./models"
 
+
+export function getRandomInt(min = 0, max = Math.pow(2, 16)) {
+  min = Math.ceil(min)
+  max = Math.floor(max)
+  return Math.floor(Math.random() * (max - min) + min) // The maximum is exclusive and the minimum is inclusive
+}
 
 export function* playerPieces(
   width: number,
