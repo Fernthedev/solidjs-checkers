@@ -42,8 +42,6 @@ export default function CheckerBoard(props: CheckerBoardProps) {
   function onSquareClick(squareId: number) {
     const piece = selectedPiece()
 
-    console.log("Square clicked")
-
     if (!piece) return // no piece selected
     if (piece.position === squareId) return // square where piece was selected should be ignored
     if (!validMoves()!.some((e) => e === squareId)) return // Not a playable location
