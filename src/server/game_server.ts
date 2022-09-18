@@ -126,6 +126,9 @@ export class GameSession {
     this.players.forEach((e) => {
       if (e.socket.readyState != ws.OPEN) return
 
+      writeToPlayer(e, "sessionClosed", {
+        winner: -1
+      })
       e.socket.close()
     })
 

@@ -9,6 +9,9 @@ import LoadingSpinner from "../components/loading"
 
 export default function MultiplayerSetupPage() {
   const navigator = useNavigate()
+
+  const [hosting, setHosting] = createSignal(false)
+
   // fetch("api/session/start", {
   //   headers: {
   //     Accept: "application/json",
@@ -22,6 +25,8 @@ export default function MultiplayerSetupPage() {
   // })
 
   async function doHost() {
+    setHosting(true)
+
     const response = await fetch("api/session/start", {
       headers: {
         Accept: "application/json",
@@ -90,7 +95,7 @@ export default function MultiplayerSetupPage() {
           )}
         </Show>
 
-        <Show when={isSubmitting()}>
+        <Show when={isSubmitting() || hosting()}>
           <div class="mx-auto flex items-center flex-col h-20 w-20">
             <LoadingSpinner />
           </div>
