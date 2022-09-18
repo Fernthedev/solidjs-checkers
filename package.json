@@ -6,10 +6,11 @@
   "scripts": {
     "start": "vite",
     "dev": "vite",
-    "express": "nodemon --exec \"ts-node-esm src/server/express\" --watch src/ -e js,json,ts -i src/client/**/*",
+    "express": "nodemon --exec \"ts-node-esm express\" --watch src/ --watch ./express.ts -e js,json,ts -i src/client/**/*",
+    "run_server": "node --experimental-specifier-resolution=node ./dist/express.js",
     "build:client": "vite build --outDir dist/app",
-    "build:server": "vite build --outDir dist/server --ssr ./express.ts",
-    "build": "yarn build:client && yarn build:server",
+    "build:server": "tsc -p ./tsconfig.express.json",
+    "build": "tsc --build --dry && yarn build:client && yarn build:server",
     "serve": "vite preview",
     "test": "vitest"
   },

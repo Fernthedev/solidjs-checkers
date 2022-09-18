@@ -1,13 +1,13 @@
 import path from "path"
 import { fileURLToPath } from "url"
 import express from "express"
-import router from "./api/routes"
+import router from "./src/server/api/routes"
 import ws, { WebSocketServer } from "ws"
-import { onWebSocketConnect } from "./websocket_handler"
+import { onWebSocketConnect } from "./src/server/websocket_handler"
 
 const { PORT = 5173 } = process.env
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
+// const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 export let wsServer: ws.Server
 
@@ -50,11 +50,10 @@ async function createServer() {
   app.use("/api", router)
 
   // Serve app production bundle
-  app.use(express.static("dist/app"))
-
-  app.get("*", async (_req, res) => {
-    res.sendFile(path.join(__dirname, "app/index.html"))
-  })
+  console.log("loading at", path.join(__dirname, "app"))
+  app.use(express.static(path.join(__dirname, "app"), {
+    
+  }))
 
   console.log(`Listening to ${PORT}`)
 

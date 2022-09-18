@@ -8,9 +8,10 @@
     "esModuleInterop": true,
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
-    "outDir": "./dist/",
+    "outDir": "./dist/app/",
     "types": ["vite/client"],
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "skipLibCheck": true
   },
   "ts-node": {
     "esm": true,

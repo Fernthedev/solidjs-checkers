@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "files": ["./express.ts"],
+  "include": ["./src/**/*"],
+  "exclude": ["./src/client/**/*"],
+  "compilerOptions": {
+    "outDir": "dist/",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "isolatedModules": true,
+  }
+}
