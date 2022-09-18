@@ -7,7 +7,7 @@ import { onWebSocketConnect } from "./src/server/websocket_handler"
 
 const { PORT = 5173 } = process.env
 
-// const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 export let wsServer: ws.Server
 
@@ -52,7 +52,7 @@ async function createServer() {
   // Serve app production bundle
   console.log("loading at", path.join(__dirname, "app"))
   app.use(express.static(path.join(__dirname, "app"), {
-    
+
   }))
 
   console.log(`Listening to ${PORT}`)

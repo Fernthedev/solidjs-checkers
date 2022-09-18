@@ -13,7 +13,7 @@
     "build": "yarn tsc --build --dry && yarn build:client && yarn build:server",
     "serve": "vite preview",
     "test": "vitest",
-    "docker": "docker build -t solidjs-checkers . && docker run -d solidjs-checkers --name solidjs-checkers"
+    "docker": "docker build -t solidjs-checkers . && docker run --name solidjs-checkers -p 5173:80 -d solidjs-checkers"
   },
   "license": "MIT",
   "devDependencies": {
