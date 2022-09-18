@@ -113,9 +113,11 @@ export function* calculatePlayableSpots(
     if (row < 0) return
     if (row >= height) return
 
+    if (currentColumn === column || currentRow === row) return
+
     if (!queen) {
-      if (direction < 0 && row >= currentRow) return
-      if (direction > 0 && row <= currentRow) return
+      if (direction < 0 && row > currentRow) return
+      if (direction > 0 && row < currentRow) return
     }
 
     if (Math.abs(column - currentColumn) > 2 || Math.abs(row - currentRow) > 2)
