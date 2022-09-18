@@ -80,7 +80,7 @@ export class NetworkMultiplayer implements IMultiplayerCore {
     this.setPlayerType = setPlayerType
 
     this.socket = new WebSocket(
-      `ws://${window.location.hostname}:${window.location.port}/api`
+      window.location.protocol === "http" ? "ws" : "wss" + `://${window.location.hostname}:${window.location.port}/api`
     )
 
     this.socket.addEventListener("open", () => {
