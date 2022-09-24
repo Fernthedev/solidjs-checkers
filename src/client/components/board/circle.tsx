@@ -21,12 +21,18 @@ export default function Circle(props: CircleProps) {
       class="square"
       style={{
         cursor: props.interactable && props.onClick ? "pointer" : undefined,
+        height: "100%",
+        width: "100%"
       }}
       onClick={props.onClick}
       viewBox={`0 0 ${size} ${size}`}
       shape-rendering="geometricPrecision"
     >
       <circle
+        style={{
+          height: "100%",
+          width: "100%"
+        }}
         cx={size / 2}
         cy={size / 2}
         r={adjustedRadius}
