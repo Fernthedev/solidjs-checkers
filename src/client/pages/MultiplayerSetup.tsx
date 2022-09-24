@@ -24,6 +24,9 @@ export default function MultiplayerSetupPage() {
   //   method: "POST",
   // })
 
+  const [width, setWidth] = createSignal(8)
+  const [height, setHeight] = createSignal(8)
+
   async function doHost() {
     setHosting(true)
 
@@ -33,8 +36,8 @@ export default function MultiplayerSetupPage() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        width: 8,
-        height: 8,
+        width: Math.abs(width()) ?? 8, // make 0 -> 8 because null
+        height: Math.abs(height()) ?? 8,
       }),
       method: "POST",
     })
@@ -62,6 +65,24 @@ export default function MultiplayerSetupPage() {
       <button class="btn btn-accent m-5 mt-10" onClick={doHost}>
         Host
       </button>
+
+      <div></div>
+      <input
+        placeholder="Width"
+        class="input input-bordered input-accent"
+        name="width"
+        id={"width"}
+        value={width()}
+        onInput={(e) => setWidth(parseInt(e.currentTarget.value))}
+      />
+      <input
+        placeholder="height"
+        class="input input-bordered input-accent"
+        name="height"
+        id={"height"}
+        value={height()}
+        onInput={(e) => setHeight(parseInt(e.currentTarget.value))}
+      />
 
       <br />
 
