@@ -17,6 +17,12 @@ function LobbyWaiting() {
   return (
     <div class="prose mx-auto text-center items-center flex flex-col">
       <h2>Waiting for game to start...</h2>
+      <a
+        class="link"
+        onClick={() => navigator.clipboard.writeText(window.location.href)}
+      >
+        <h3>Click here to copy link to join!</h3>
+      </a>
       <LoadingSpinner />
     </div>
   )
