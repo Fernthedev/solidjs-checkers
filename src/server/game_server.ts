@@ -127,7 +127,7 @@ export class GameSession {
       if (e.socket.readyState != ws.OPEN) return
 
       writeToPlayer(e, "sessionClosed", {
-        winner: -1
+        winner: -1,
       })
       e.socket.close()
     })

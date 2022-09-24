@@ -36,7 +36,7 @@ export class NetworkMultiplayer implements IMultiplayerCore {
   private readonly setSpectating: Setter<boolean>
   private readonly setPlayerType: Setter<number>
 
-  public readonly setup: Accessor<boolean>
+  public readonly isSetup: Accessor<boolean>
   private readonly setSetup: Setter<boolean>
 
   private uuid: number = 0
@@ -58,7 +58,7 @@ export class NetworkMultiplayer implements IMultiplayerCore {
 
     const [setup, setSetup] = createSignal(false)
 
-    this.setup = setup
+    this.isSetup = setup
     this.setSetup = setSetup
 
     this.width = w
@@ -80,7 +80,9 @@ export class NetworkMultiplayer implements IMultiplayerCore {
     this.setPlayerType = setPlayerType
 
     this.socket = new WebSocket(
-      window.location.protocol === "http" ? "ws" : "wss" + `://${window.location.hostname}:${window.location.port}/api`
+      window.location.protocol === "http"
+        ? "ws"
+        : "wss" + `://${window.location.hostname}:${window.location.port}/api`
     )
 
     this.socket.addEventListener("open", () => {

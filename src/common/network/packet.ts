@@ -1,16 +1,20 @@
-import { CheckerboardPiece, CheckerboardPieceIdentity, PlayerType } from "../models"
+import {
+  CheckerboardPiece,
+  CheckerboardPieceIdentity,
+  PlayerType,
+} from "../models"
 
 export interface InitialHandshakePacket {
   lobbyID: number
 }
 
 export interface Packet {
-  sessionClosed?: GameSessionClosed,
-  serverError?: ServerError,
-  pieceQueen?: PieceQueen,
-  pieceKilled?: PieceKilled,
-  pieceMoved?: PieceMoved,
-  changeTurn?: ChangeTurn,
+  sessionClosed?: GameSessionClosed
+  serverError?: ServerError
+  pieceQueen?: PieceQueen
+  pieceKilled?: PieceKilled
+  pieceMoved?: PieceMoved
+  changeTurn?: ChangeTurn
   sessionData?: SessionData | null
 }
 
@@ -19,7 +23,7 @@ interface ServerError {
 }
 
 interface GameSessionClosed {
-  winner: number| null
+  winner: number | null
 }
 
 interface PieceQueen {
@@ -40,10 +44,10 @@ interface ChangeTurn {
 }
 
 interface SessionData {
-  width: number,
-  height: number,
-  pieces: CheckerboardPiece[],
-  yourUUID: CheckerboardPieceIdentity,
+  width: number
+  height: number
+  pieces: CheckerboardPiece[]
+  yourUUID: CheckerboardPieceIdentity
   player: PlayerType
   spectating: boolean
 }

@@ -51,10 +51,8 @@ async function createServer() {
 
   // Serve app production bundle
   console.log("loading at", path.join(__dirname, "app"))
-  
-  app.use("/assets", express.static(path.join(__dirname, "app", "assets"), {
 
-  }))
+  app.use("/assets", express.static(path.join(__dirname, "app", "assets"), {}))
 
   // Fallback to index
   app.use("*", async (_req, res) => {

@@ -15,11 +15,8 @@ export function createPlayer(ws: ws.WebSocket): IPlayer {
   }
 }
 
-export function createSession(
-  width: number,
-  height: number
-): LobbySession {
-  let id = getRandomInt();  // getRandomInt()
+export function createSession(width: number, height: number): LobbySession {
+  let id = getRandomInt() // getRandomInt()
   while (Object.hasOwn(sessions, id)) {
     id = getRandomInt()
   }
@@ -33,10 +30,8 @@ export function getSession(id: number) {
   return sessions[id]
 }
 
-export function removeSession(
-    id: number
-) {
+export function removeSession(id: number) {
   console.log("Removed session", id)
-    sessions[id]?.end()
-    delete sessions[id]
+  sessions[id]?.end()
+  delete sessions[id]
 }

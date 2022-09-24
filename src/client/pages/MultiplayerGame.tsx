@@ -27,8 +27,9 @@ export default function MultiplayerGamePage() {
 
   const navigator = useNavigate()
 
-  const multiplayer = new NetworkMultiplayer(parseInt(params.lobbyID), (winner) =>
-    navigator(`/game_over/${winner}`)
+  const multiplayer = new NetworkMultiplayer(
+    parseInt(params.lobbyID),
+    (winner) => navigator(`/game_over/${winner}`)
   )
 
   return (
@@ -36,7 +37,7 @@ export default function MultiplayerGamePage() {
       <div class="prose text-center mx-auto">
         <h4>Lobby ID: {params.lobbyID}</h4>
       </div>
-      <Show when={multiplayer.setup()} fallback={LobbyWaiting()}>
+      <Show when={multiplayer.isSetup()} fallback={LobbyWaiting()}>
         <PlayerText multiplayer={multiplayer} />
         <Show when={multiplayer.canTakeTurn()}>
           <h3 class="text-center mx-auto">It is now your turn!</h3>

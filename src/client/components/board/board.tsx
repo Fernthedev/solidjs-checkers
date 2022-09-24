@@ -57,9 +57,7 @@ export default function CheckerBoard(props: CheckerBoardProps) {
 
   return (
     <>
-      <div
-        class="flex center"
-      >
+      <div class="flex center">
         <div
           class="checker-grid"
           style={{

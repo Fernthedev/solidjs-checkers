@@ -1,9 +1,9 @@
 .center {
-    text-align: center;
-    align-items: center;
-    justify-content: center;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
 }
 
 div.center {
-    display: flex
+  display: flex;
 }

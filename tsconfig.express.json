@@ -7,6 +7,6 @@
     "outDir": "dist/",
     "module": "ESNext",
     "moduleResolution": "node",
-    "isolatedModules": true,
+    "isolatedModules": true
   }
 }

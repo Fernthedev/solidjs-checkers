@@ -9,6 +9,6 @@ export interface CheckerboardPiece {
   player: PlayerType
 }
 
-    export function piecesToMap(pieces: CheckerboardPiece[]) {
-      return Object.fromEntries(pieces.map((e) => [e.uuid, e]))
-    }
+export function piecesToMap(pieces: CheckerboardPiece[]) {
+  return Object.fromEntries(pieces.map((e) => [e.uuid, e]))
+}

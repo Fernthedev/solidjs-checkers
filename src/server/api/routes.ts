@@ -1,10 +1,7 @@
 import express from "express"
-import sessionRouter from "./session";
+import sessionRouter from "./session"
 
-const router = express.Router(
-
-);
-
+const router = express.Router()
 
 router.use("/session", sessionRouter)
 

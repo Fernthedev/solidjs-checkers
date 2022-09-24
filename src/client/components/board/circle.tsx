@@ -22,7 +22,7 @@ export default function Circle(props: CircleProps) {
       style={{
         cursor: props.interactable && props.onClick ? "pointer" : undefined,
         height: "100%",
-        width: "100%"
+        width: "100%",
       }}
       onClick={props.onClick}
       viewBox={`0 0 ${size} ${size}`}
@@ -31,7 +31,7 @@ export default function Circle(props: CircleProps) {
       <circle
         style={{
           height: "100%",
-          width: "100%"
+          width: "100%",
         }}
         cx={size / 2}
         cy={size / 2}

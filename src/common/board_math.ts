@@ -1,6 +1,5 @@
 import { CheckerboardPiece, PlayerType } from "./models"
 
-
 export function getRandomInt(min = 0, max = Math.pow(2, 16)) {
   min = Math.ceil(min)
   max = Math.floor(max)
@@ -13,7 +12,10 @@ export function* playerPieces(
   type: PlayerType,
   reverse: boolean
 ): Generator<CheckerboardPiece> {
-  let spots: IterableIterator<[number, number]> = availableCircleSpots(width, height)
+  let spots: IterableIterator<[number, number]> = availableCircleSpots(
+    width,
+    height
+  )
 
   if (reverse) spots = [...spots].reverse().values()
 
@@ -31,7 +33,10 @@ export function* playerPieces(
   }
 }
 
-export function* availableCircleSpots(width: number, height: number): Generator<[number, number], void> {
+export function* availableCircleSpots(
+  width: number,
+  height: number
+): Generator<[number, number], void> {
   // I am too lazy to find a proper algorithm/formula for this
   for (let row = 0; row < height; row++) {
     for (let column = 0; column < width; column++) {
@@ -43,7 +48,10 @@ export function* availableCircleSpots(width: number, height: number): Generator<
   }
 }
 
-export function getPosition([column, row]: readonly [number, number], width: number) {
+export function getPosition(
+  [column, row]: readonly [number, number],
+  width: number
+) {
   return column + row * width
 }
 
