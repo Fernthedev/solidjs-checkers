@@ -36,6 +36,7 @@ async function createServer() {
 
       setSocketAlive(ws, false)
       ws.ping()
+      ws.send({}) // trigger message for client
     })
   }, 30000)
 
