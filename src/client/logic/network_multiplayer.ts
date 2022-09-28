@@ -43,6 +43,8 @@ export class NetworkMultiplayer implements IMultiplayerCore {
 
   private socket!: WebSocket
 
+  private pingTimeout?: NodeJS.Timeout
+
   constructor(
     lobbyID: number,
     private readonly onGameEnd: (player_id: number) => any
@@ -91,6 +93,25 @@ export class NetworkMultiplayer implements IMultiplayerCore {
         lobbyID: lobbyID,
       }
       this.socket.send(JSON.stringify(packet))
+    })
+
+    const retimer = () => {
+      clearTimeout(this.pingTimeout)
+
+      this.pingTimeout = setTimeout(() => {
+        this.socket.close()
+      }, 30000 + 1000)
+    }
+
+    this.socket.addEventListener("close", () => {
+      console.log("Got disconected")
+      clearTimeout(this.pingTimeout)
+      this.onGameEnd(-1)
+    })
+
+    // Ping messages will trigger this
+    this.socket.addEventListener("message", () => {
+      retimer()
     })
     this.socket.addEventListener("message", (e) => this.handlePacket(e.data))
   }
