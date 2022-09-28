@@ -1,5 +1,5 @@
 import { Link, Params, useNavigate, useParams } from "@solidjs/router"
-import { Show } from "solid-js"
+import { createResource, Show } from "solid-js"
 import { createStore } from "solid-js/store"
 import { IMultiplayerCore } from "../logic/multiplayer"
 import { NetworkMultiplayer } from "../logic/network_multiplayer"
@@ -38,11 +38,22 @@ export default function MultiplayerGamePage() {
     (winner) => navigator(`/game_over/${winner}`)
   )
 
+  const [data] = createResource(params.lobbyID, (lobbyID) =>
+    fetch(`/api/session/find?lobbyID=${lobbyID}`)
+  )
+
   return (
     <>
       <div class="prose text-center mx-auto">
         <h4>Lobby ID: {params.lobbyID}</h4>
       </div>
+
+      <Show when={data.error}>
+        <h3 class="text-center mx-auto" color="red">
+          Could not find lobby {params.lobbyID}
+        </h3>
+      </Show>
+
       <Show when={multiplayer.isSetup()} fallback={LobbyWaiting()}>
         <PlayerText multiplayer={multiplayer} />
         <Show when={multiplayer.canTakeTurn()}>
