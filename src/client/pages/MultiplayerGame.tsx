@@ -48,7 +48,7 @@ export default function MultiplayerGamePage() {
         <h4>Lobby ID: {params.lobbyID}</h4>
       </div>
 
-      <Show when={data.error}>
+      <Show when={data.error || !data.latest?.ok}>
         <h3 class="text-center mx-auto" color="red">
           Could not find lobby {params.lobbyID}
         </h3>
