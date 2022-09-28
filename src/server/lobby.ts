@@ -1,5 +1,5 @@
 import { CheckerboardPieceIdentity } from "../common/models"
-import { removeSession } from "./game_controller"
+import { closePlayer, removeSession } from "./game_controller"
 import { IPlayer } from "./player"
 import { GameSession } from "./game_server"
 
@@ -23,11 +23,13 @@ export class LobbySession {
     }
     this.players[player.uuid] = player
 
+    // Destroy lobby if empty
     player.socket.addEventListener("close", () => {
       delete this.players[player.uuid]
       this.destroyIfEmpty()
     })
 
+    // Game is starting
     if (Object.entries(this.players).length >= 2) {
       player.player = 1
       this.start()
@@ -52,6 +54,9 @@ export class LobbySession {
 
   end() {
     this.session = null
+    Object.values(this.players).forEach((e) => {
+      closePlayer(e)
+    })
     this.players = []
   }
 }

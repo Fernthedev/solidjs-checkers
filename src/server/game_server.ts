@@ -13,7 +13,7 @@ import {
 } from "../common/models"
 import { readPacket, writeToPlayer } from "../common/network/network"
 import { Packet } from "../common/network/packet"
-import { removeSession } from "./game_controller"
+import { closePlayer, removeSession } from "./game_controller"
 import { IPlayer } from "./player"
 
 const decoder = new TextDecoder("utf-8")
@@ -124,12 +124,7 @@ export class GameSession {
     if (player.spectating) return
 
     this.players.forEach((e) => {
-      if (e.socket.readyState != ws.OPEN) return
-
-      writeToPlayer(e, "sessionClosed", {
-        winner: -1,
-      })
-      e.socket.close()
+      closePlayer(e)
     })
 
     removeSession(this.id)
