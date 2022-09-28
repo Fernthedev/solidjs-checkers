@@ -39,7 +39,9 @@ export default function MultiplayerGamePage() {
   )
 
   const [data] = createResource(params.lobbyID, (lobbyID) =>
-    fetch(`/api/session/find?lobbyID=${lobbyID}`)
+    fetch(`/api/session/find?lobbyID=${lobbyID}`, {
+      method: "post"
+    })
   )
 
   return (
