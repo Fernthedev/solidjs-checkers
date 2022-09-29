@@ -1,7 +1,5 @@
-import { Link, Params, useNavigate, useParams } from "@solidjs/router"
-import { createResource, Show } from "solid-js"
-import { createStore } from "solid-js/store"
-import { IMultiplayerCore } from "../logic/multiplayer"
+import { Params, useNavigate, useParams } from "@solidjs/router"
+import { createResource, createSignal, Show } from "solid-js"
 import { NetworkMultiplayer } from "../logic/network_multiplayer"
 import CheckerBoard from "../components/board/board"
 import PlayerText from "../components/board/player"
@@ -33,15 +31,23 @@ export default function MultiplayerGamePage() {
 
   const navigator = useNavigate()
 
-  const multiplayer = new NetworkMultiplayer(
-    parseInt(params.lobbyID),
-    (winner) => navigator(`/game_over/${winner}`)
-  )
-
   const [data] = createResource(params.lobbyID, (lobbyID) =>
     fetch(`/api/session/find?lobbyID=${lobbyID}`, {
-      method: "post"
+      method: "post",
     })
+  )
+
+  const [error, setError] = createSignal<string>()
+
+  const multiplayer = new NetworkMultiplayer(
+    parseInt(params.lobbyID),
+    (winner) => {
+      if (winner >= 0) {
+        return navigator(`/game_over/${winner}`)
+      } else {
+        setError("Suffered from unhandled error")
+      }
+    }
   )
 
   return (
@@ -49,6 +55,14 @@ export default function MultiplayerGamePage() {
       <div class="prose text-center mx-auto">
         <h4>Lobby ID: {params.lobbyID}</h4>
       </div>
+
+      <Show when={error()} keyed>
+        {(error) => (
+          <h3 class="text-center mx-auto" color="red">
+            {error}
+          </h3>
+        )}
+      </Show>
 
       <Show when={data.error || !data.latest?.ok}>
         <h3 class="text-center mx-auto" color="red">

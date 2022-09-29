@@ -21,7 +21,7 @@ export function onWebSocketConnect(ws: ws.WebSocket, req: IncomingMessage) {
 
     if (!session) {
       console.log("Session not found, terminating")
-      ws.close()
+      ws.terminate()
       return
     }
 
