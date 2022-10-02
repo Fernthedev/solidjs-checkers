@@ -28,6 +28,9 @@ async function createServer() {
     ws.on("pong", () => {
       setSocketAlive(ws, true)
     })
+    ws.on("message", () => {
+      setSocketAlive(ws, true)
+    })
   })
 
   const interval = setInterval(() => {
