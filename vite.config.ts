@@ -9,6 +9,7 @@ export default defineConfig({
   plugins: [solidPlugin()],
   server: {
     port: 3000,
+    // Redirect calls to express
     proxy: {
       "/api": {
         target: `http://localhost:${PORT}`,

@@ -59,6 +59,7 @@ async function createServer() {
   app.use("/assets", express.static(path.join(__dirname, "app", "assets"), {}))
 
   // Fallback to index
+  // Since this is an SPA
   app.use("*", async (_req, res) => {
     res.sendFile(path.join(__dirname, "app", "index.html"))
   })
